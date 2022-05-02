@@ -1,7 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
 import { StorageService } from '../../services/storage.service';
-import { User } from '../../models/User';
+import { User } from '../../models/user';
 import { Router } from '@angular/router';
 import { EnumCodigoRespuesta, EnumEstado } from '../../helper/enum';
 
