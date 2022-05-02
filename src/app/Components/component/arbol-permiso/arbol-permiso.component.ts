@@ -1,5 +1,5 @@
-import {Component, Injectable, Input, OnInit, ViewChild} from '@angular/core';
-import {isNil, remove, reverse} from 'lodash';
+import { Component, Injectable, Input, OnInit, ViewChild } from '@angular/core';
+import { isNil, remove, reverse } from 'lodash';
 import {
   DownlineTreeviewItem,
   OrderDownlineTreeviewEventParser,
@@ -9,11 +9,11 @@ import {
   TreeviewHelper,
   TreeviewItem,
 } from 'ngx-treeview';
-import {ArbolPermisoService} from './arbol-permiso.service';
-import {Permiso} from 'src/app/models/permiso';
-import {PermisoLista} from 'src/app/models/permiso-lista';
-import {EnumCodigoRespuesta} from 'src/app/helper/enum';
-import {PermisoService} from 'src/app/services/permiso.service';
+import { ArbolPermisoService } from './arbol-permiso.service';
+import { Permiso } from 'src/app/models/permiso';
+import { PermisoLista } from 'src/app/models/permiso-lista';
+import { EnumCodigoRespuesta } from 'src/app/helper/enum';
+import { PermisoService } from 'src/app/services/permiso.service';
 
 @Injectable()
 export class ProductTreeviewConfig extends TreeviewConfig {
@@ -33,11 +33,11 @@ export class ProductTreeviewConfig extends TreeviewConfig {
       provide: TreeviewEventParser,
       useClass: OrderDownlineTreeviewEventParser,
     },
-    {provide: TreeviewConfig, useClass: ProductTreeviewConfig},
+    { provide: TreeviewConfig, useClass: ProductTreeviewConfig },
   ],
 })
 export class ArbolPermisoComponent implements OnInit {
-  @ViewChild(TreeviewComponent, {static: true})
+  @ViewChild(TreeviewComponent, { static: true })
   treeviewComponent: TreeviewComponent;
   items: TreeviewItem[];
   rows: string[];
@@ -49,18 +49,19 @@ export class ArbolPermisoComponent implements OnInit {
   constructor(
     private arbolPermisoService: ArbolPermisoService,
     private permisoService: PermisoService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
-    this.arbolPermisoService.obtenerPermiso(this.id, this.serviceCode).subscribe(
-      (resultado) => {
-        this.items = resultado;
-      },
-      (error) => {
-        this.mensageError = error.errorMessage;
-      }
-    );
+    this.arbolPermisoService
+      .obtenerPermiso(this.id, this.serviceCode)
+      .subscribe(
+        (resultado) => {
+          this.items = resultado;
+        },
+        (error) => {
+          this.mensageError = error.errorMessage;
+        }
+      );
   }
 
   onSelectedChange(downlineItems: DownlineTreeviewItem[]) {
@@ -196,9 +197,8 @@ export class ArbolPermisoComponent implements OnInit {
             });
           }
           console.log('listaPermisosUnion final :>> ', listaPermisosUnion);
-          this.items = this.arbolPermisoService.armarArbolPermiso(
-            listaPermisosUnion
-          );
+          this.items =
+            this.arbolPermisoService.armarArbolPermiso(listaPermisosUnion);
           listaPermisoTotal = this.colocarPermisosHijos(listaPermisoTotal);
           this.deshabilitarPermisosPerfiles(listaPermisoTotal);
         } else {

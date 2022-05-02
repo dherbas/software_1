@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {TreeviewItem, TreeItem} from 'ngx-treeview';
-import {PermisoService} from 'src/app/services/permiso.service';
-import {EnumCodigoRespuesta} from 'src/app/helper/enum';
-import {PermisoLista} from 'src/app/models/permiso-lista';
-import {Permiso} from 'src/app/models/permiso';
-import {Observable, Subject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { TreeviewItem, TreeItem } from 'ngx-treeview';
+import { PermisoService } from 'src/app/services/permiso.service';
+import { EnumCodigoRespuesta } from 'src/app/helper/enum';
+import { PermisoLista } from 'src/app/models/permiso-lista';
+import { Permiso } from 'src/app/models/permiso';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +13,7 @@ export class ArbolPermisoService {
   mensageError: string = '';
   private treeviewItem = new Subject<Array<TreeviewItem>>();
 
-  constructor(private permisoService: PermisoService) {
-  }
+  constructor(private permisoService: PermisoService) {}
 
   obtenerPermiso(id: number, serviceCode: string): Observable<any> {
     this.permisoService.obtenerLista(id, serviceCode).subscribe(

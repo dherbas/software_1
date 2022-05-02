@@ -1,8 +1,8 @@
-import {Permiso} from './permiso';
-import {Perfil} from './perfil';
-import {PermisoLista} from './permiso-lista';
-import {EnumEstado, EnumTypeUser} from 'src/app/helper/enum';
-import {UsuarioExtraData} from "./UsuarioExtraData";
+import { Permiso } from './permiso';
+import { Perfil } from './perfil';
+import { PermisoLista } from './permiso-lista';
+import { EnumEstado, EnumTypeUser } from 'src/app/helper/enum';
+import { UsuarioExtraData } from './UsuarioExtraData';
 
 export interface IUsuario {
   id: number;
@@ -107,7 +107,10 @@ export class Usuario implements IUsuario {
         : '';
     this.type_id = obj.type_id;
     this.ci = obj.ci;
-    this.extra_data = obj.extra_data.length > 0 ? JSON.parse(obj.extra_data) : new UsuarioExtraData();
+    this.extra_data =
+      obj.extra_data.length > 0
+        ? JSON.parse(obj.extra_data)
+        : new UsuarioExtraData();
     this.transactional_login = this.extra_data?.transactional_login;
     this.maximum_daily_amount = obj.maximum_daily_amount;
   }

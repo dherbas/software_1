@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {User} from 'src/app/models/user';
-import {StorageService} from 'src/app/services/storage.service';
-import {Permission} from 'src/app/models/Permission';
+import { Component, Input, OnInit } from '@angular/core';
+import { User } from 'src/app/models/user';
+import { StorageService } from 'src/app/services/storage.service';
+import { Permission } from 'src/app/models/pPermission';
 
 @Component({
   selector: 'app-menu',
@@ -17,7 +17,6 @@ export class MenuComponent implements OnInit {
   constructor(private storageService: StorageService) {
     this.selectedItem = 0;
     this.selectedSubItem = null;
-
   }
 
   private _isMenuVisible: boolean;
