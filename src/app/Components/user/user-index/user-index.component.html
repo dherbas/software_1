@@ -1,0 +1,168 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">USUARIOS</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <div class="row">
+              <div *ngIf="mensageError.length> 0" class="col-12 lb-error">
+                {{mensageError}}
+              </div>
+              <div [ngClass]="{'da-pt-35px': mensageError.length== 0, 'da-pt-20px': mensageError.length> 0}"
+                   class="col-12">
+                <input (change)="obtenerListado()" [(ngModel)]="radioSeleccionado" [value]=enumEstado.Todos
+                       class="css-radio" id="pein-todos"
+                       name="pein-radio3" type="radio">
+                <label class="da-lb-13-03-r css-label-radio da-mr-30px" for="pein-todos">Todos</label>
+                <input (change)="obtenerListado()" [(ngModel)]="radioSeleccionado" [value]=enumEstado.Habilitado
+                       class="css-radio"
+                       id="pein-habilitado" name="pein-radio1" type="radio">
+                <label class="da-lb-13-03-r css-label-radio da-mr-30px" for="pein-habilitado">Habilitados</label>
+                <input (change)="obtenerListado()" [(ngModel)]="radioSeleccionado" [value]=enumEstado.Deshabilitado
+                       class="css-radio"
+                       id="pein-deshabilitado" name="pein-radio2" type="radio">
+                <label class="da-lb-13-03-r css-label-radio da-mr-30px" for="pein-deshabilitado">Deshabilitados</label>
+              </div>
+            </div>
+
+
+            <div class="row mt-3" [hidden]="!needDelivery">
+              <div style="padding-left: 15px;">
+                <label class="col-form-label" style="font-size: 13px;">Tipo de usuario:</label>
+              </div>
+              <div class="col-2">
+                <div class="form-group">
+                  <select [(ngModel)]=tipoUsuario class="form-control custom-select ">
+                    <option [ngValue]=EnumTipoUsuario.Todos>Todos</option>
+                    <option [ngValue]=EnumTipoUsuario.Multipago>Multipago</option>
+                    <option [ngValue]=EnumTipoUsuario.Cobrador>Cobrador</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row mt-0">
+              <div style="padding-left: 15px;">
+                <label class="col-form-label" style="font-size: 13px;">Búsqueda por:&nbsp;&nbsp; </label>
+              </div>
+              <div class="col-2">
+                <div class="form-group">
+                  <select [(ngModel)]=tipoBusqueda class="form-control custom-select ">
+                    <option [ngValue]=enumTipoBusqueda.Username>Usuario</option>
+                    <option [ngValue]=enumTipoBusqueda.Nombres>Nombre</option>
+                    <option [ngValue]=enumTipoBusqueda.Apellidos>Apellidos</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group has-search">
+                  <span class="fas fa-search form-control-feedback"></span>
+                  <input [(ngModel)]="textoCriterio" class="form-control" name="searchText" placeholder="Buscar"
+                         type="text">
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-9">
+                <button (click)="obtenerListado()" class="btn btn-primary" style="background-color: #138FF1;"
+                        type="button">
+                  Buscar
+                </button>
+              </div>
+              <div class="col-3 text-right">
+                <button (click)="usuario(0)" class="buttonNuevo">
+                  <span class="">Nuevo usuario</span>
+                  <img src="assets/slices/ico_nuevo.png" width="17%">
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div *ngIf="listaUsuarios.length> 0; else elseUsuario01" class="card tabla__resultados col-12"
+                     style="padding:0px">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                      <tr class="table--titulos" style="padding: 1rem !important">
+                        <th>Tipo usuario</th>
+                        <th>Usuario</th>
+                        <th *ngIf="usuarioSession.list_code_service.length>1">Empresa</th>
+                        <th>Nombre(s)</th>
+                        <th>Apellidos</th>
+                        <th>Perfiles</th>
+                        <!-- <th style="width: 4%;">Ver</th> -->
+                        <th style="width: 4%;">Editar</th>
+                        <th style="width: 4%;">Resetear contraseña</th>
+                        <th style="width: 4%;">Estado</th>
+                        <th style="width: 5%;" class="text-center">Enviar correo</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr
+                        *ngFor="let item of listaUsuarios | paginate: { itemsPerPage: _Paginador.ItemsPerPage, currentPage: _Paginador.CurrentPage }; let i= index">
+                        <td>{{item.type_id}}</td>
+                        <td>{{item.username}}</td>
+                        <td *ngIf="usuarioSession.list_code_service.length>1">{{item.company_name}}</td>
+                        <td>{{item.first_name}}</td>
+                        <td>{{item.last_name}}</td>
+                        <td>
+                          <span *ngIf="item.list_profile.length > 0">{{item.list_profile[0].name}}</span>
+                        </td>
+                        <!-- <td class="ico">
+                            <img src="assets/slices/ico_ver.png" (click)="ver(item.id)">
+                          </td> -->
+                        <td class="ico">
+                          <img (click)="usuario(item.id) " [src]="'assets/slices/ico_editar.png'">
+                        </td>
+                        <td class="ico">
+                          <img (click)="resetearPassword(item.id, item.username) "
+                               [src]="'assets/slices/ico_resetear.png'">
+                        </td>
+                        <td class="ico">
+                          <img style="cursor: pointer;" (click)="cambiarEstado(item.id, item.status, item.username) "
+                               *ngIf="item.status == 0; else elseBlock"
+                               [src]="'assets/slices/ico_deshabilitar.png'">
+                          <ng-template #elseBlock>
+                            <img style="cursor: pointer;" (click)="cambiarEstado(item.id, item.status, item.username) "
+                                 [src]="'assets/slices/ico_habilitar.png'">
+                          </ng-template>
+                        </td>
+                        <td>
+                          <div *ngIf="item.type_id == this.EnumTipoUsuario.Cobrador; else NoCobrador">
+                            <img style="cursor: pointer;" [src]="'assets/slices/opc_no_desh.png'">
+                          </div>
+                          <ng-template #NoCobrador>
+                            <div *ngIf="item.send_email; else elseNoSendMail">
+                                <img style="cursor: pointer;" (click)="cambiarEnviarEmail(item.id,item.username, item.send_email) "
+                                      [src]="'assets/slices/opc_si.png'">
+                            </div>
+
+                            <ng-template #elseNoSendMail>
+                              <img style="cursor: pointer;" (click)="cambiarEnviarEmail(item.id,item.username, item.send_email) "
+                                  [src]="'assets/slices/opc_no.png'">
+                            </ng-template>
+                        </ng-template>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="conetendor-paginacion">
+                    <pagination-controls (pageChange)="_Paginador.CurrentPage = $event" autoHide="true" maxSize="8"
+                                         nextLabel=">" previousLabel="<">
+                    </pagination-controls>
+                  </div>
+                </div>
+                <ng-template #elseUsuario01>
+                  <label class="msg-no-data" style="padding-bottom: 16em;">{{mensageErrorListado}}</label>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

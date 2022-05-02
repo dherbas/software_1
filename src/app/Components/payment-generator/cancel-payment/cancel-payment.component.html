@@ -1,0 +1,24 @@
+<form action="" (ngSubmit)="processCancelPayOrder()">
+
+  <div class="col-12 text-left pd-left ">
+    <span class="dialogo-titulo">Anular orden de pago</span>
+  </div>
+  <div class="col-lg-12 text-left pd-left">
+    <span class="lb-waring">Ingrese el motivo de la anulación: </span><br />
+    <span class="lb-error">{{ _msgError }}</span>
+    <div>
+      <textarea name="reason" style="height: 50px;" class="form-control inline" [(ngModel)]="_reason"
+        style="width: 100%;" maxlength="200">
+      </textarea>
+    </div>
+    <span class="lb-waring">¿Está seguro que desea anular la orden de pago seleccionada?</span>
+  </div>
+  <div class="contenedor-botones">
+    <button type="button" class="btn btn-primary btn-blue" (click)="cancel()">
+      Cancelar
+    </button>
+    <button type="submit" class="btn btn-primary">
+      Aceptar
+    </button>
+  </div>
+</form>

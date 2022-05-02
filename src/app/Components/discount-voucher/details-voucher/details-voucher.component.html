@@ -1,0 +1,109 @@
+<form class="formDetailsVoucher" action="" (ngSubmit)="close()">
+
+  <div class="col-12 text-left pd-left ">
+    <span class="dialogo-titulo">Detalle del vale</span>
+  </div>
+  <div>
+    <table class="table-form table-form-modal" style="width: 100%;">
+      <tr class="size">
+        <td style="width: 110px;"></td>
+        <td style="width: 150px;"></td>
+        <td style="width: 110px;"></td>
+        <td style="width: 150px;"></td>
+      </tr>
+      <tr>
+        <td><label>Nombre(s):</label></td>
+        <td>
+          <label class="lb-description">{{ _disVoucher.first_name}} {{ _disVoucher.last_name }}
+          </label>
+        </td>
+
+        <td><label>Apellidos:</label></td>
+        <td>
+          <label class="lb-description">{{ _disVoucher.last_name }}
+          </label>
+        </td>
+
+      </tr>
+      <tr>
+        <td><label>Cédula de identidad:</label></td>
+        <td>
+          <label class="lb-description">
+            {{ _disVoucher.ci }}
+          </label>
+        </td>
+        <td><label>Teléfono/Celular:</label></td>
+        <td>
+          <label class="lb-description">{{ _disVoucher.phone_number }}</label>
+        </td>
+
+      </tr>
+      <tr>
+        <td><label>Correo electrónico:</label></td>
+        <td colspan="3">
+          <label class="lb-description">{{ _disVoucher.email }}</label>
+        </td>
+
+      </tr>
+      <tr>
+        <td colspan="4">
+          <div class="contenedor-subtitle" style="margin: 15px 0;">
+            <span class="dot-subtitle">
+            </span><span class="subtitle">Datos del vale</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Monto (Bs.):</label></td>
+        <td>
+          <label class="lb-description">
+            {{ _disVoucher.amount | number: "1.2-2"}}
+          </label>
+        </td>
+        <td><label>Fecha de asignación:</label></td>
+        <td>
+          <label
+            class="lb-description">{{ HGeneral.convertToDate(_disVoucher.assigned_date.toString()) | date: "dd/MM/yyyy" }}</label>
+        </td>
+      </tr>
+      <tr *ngIf="display_FechaValidez(); else elseTemplate">
+        <td><label>Fecha validez:</label></td>
+        <td colspan="3">
+          <label class="lb-description">
+            {{ HGeneral.convertToDate(_disVoucher.start_date.toString()) | date: "dd/MM/yyyy" }} al
+            {{ HGeneral.convertToDate(_disVoucher.end_date.toString()) | date: "dd/MM/yyyy" }}</label>
+        </td>
+      </tr>
+      <ng-template #elseTemplate>
+        <tr>
+          <td><label>Fecha canje:</label></td>
+          <td colspan="3">
+            <label
+              class="lb-description">{{ HGeneral.convertToDate(_disVoucher.used_date.toString()) | date: "dd/MM/yyyy" }}</label>
+          </td>
+        </tr>
+      </ng-template>
+
+      <tr>
+        <td><label>Estado:</label></td>
+        <td>
+          <label class="lb-description">{{ HEnumLiteral.voucherStatus(_disVoucher.status) }}</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td *ngIf="_disVoucher.status == enumVoucher.Canceled"><label>Motivo de anulación:</label></td>
+        <td>
+          <label class="lb-description">{{ _disVoucher.reason_cancel }}</label>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <button type="submit" class="btn btn-primary btn-blue ">
+      Cerrar
+    </button>
+  </div>
+</form>

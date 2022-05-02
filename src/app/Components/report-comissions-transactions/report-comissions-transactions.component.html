@@ -1,0 +1,217 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Reporte de comisiones de transacciones</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <form [formGroup]="form">
+              <div class="form-group row">
+                <label class="col-form-label col-md-auto">Fecha de inicio:</label>
+                <div class="col-sm-12 col-md-3">
+                  <input class="form-control" formControlName="start_date" max="{{this.form.get('end_date').value}}"
+                         name="start_date"
+                         placeholder="dd/mm/yyyy"
+                         type="date">
+                </div>
+                <label class="col-form-label col-md-auto mr-md-custom-2-2">Fecha fin:</label>
+                <div class="col-sm-12 col-md-3">
+                  <input class="form-control" formControlName="end_date" min="{{this.form.get('start_date').value}}"
+                         name="end_date"
+                         placeholder="dd/mm/yyyy"
+                         type="date">
+                </div>
+              </div>
+              <div class="form-group row">
+                <ng-template [ngIf]="this.isAdministrator">
+                  <label class="col-form-label col-md-auto mr-md-custom-2">Empresas:</label>
+                  <div class="col-sm-12 col-md-3">
+                    <ng-select2 [data]="this.serviceData" formControlName="service_id" style="width: 100%;"
+                                width="100%">
+                    </ng-select2>
+                  </div>
+                </ng-template>
+                <ng-template [ngIf]="!this.isAdministrator && this.user.list_code_service.length>1">
+                  <label class="col-form-label col-md-auto mr-md-custom-2">Empresas:</label>
+                  <div class="col-sm-12 col-md-3">
+                    <ng-select2 [data]="this.serviceCodeData" formControlName="service_code" style="width: 100%;"
+                                width="100%">
+                    </ng-select2>
+                  </div>
+                </ng-template>
+                <label class="col-form-label col-md-auto mr-md-1">Canal de pago:</label>
+                <div class="col-sm-12 col-md-3">
+
+                  <select class="form-control" formControlName="payment_type_id">
+                    <option value="0">Todos</option>
+                    <option
+                      value="{{this.enumPayOrderChannel.Presencial}}">{{this.getPayChannelName(this.enumPayOrderChannel.Presencial)}}</option>
+                    <option
+                      value="{{this.enumPayOrderChannel.TigoMoney}}">{{this.getPayChannelName(this.enumPayOrderChannel.TigoMoney)}}</option>
+                    <option
+                      value="{{this.enumPayOrderChannel.TarjetaCredito}}">{{this.getPayChannelName(this.enumPayOrderChannel.TarjetaCredito)}}</option>
+                    <option
+                      value="{{this.enumPayOrderChannel.PagoCodigo}}">{{this.getPayChannelName(this.enumPayOrderChannel.PagoCodigo)}}</option>
+                    <option
+                      value="{{this.enumPayOrderChannel.BCGanadero}}">{{this.getPayChannelName(this.enumPayOrderChannel.BCGanadero)}}</option>
+                    <option
+                      value="{{this.enumPayOrderChannel.QRMultipago}}">{{this.getPayChannelName(this.enumPayOrderChannel.QRMultipago)}}</option>
+                    <option
+                      value="{{this.enumPayOrderChannel.PuntoFisico}}">{{this.getPayChannelName(this.enumPayOrderChannel.PuntoFisico)}}</option>
+                    <option
+                      value="{{this.enumPayOrderChannel.Cybersource}}">{{this.getPayChannelName(this.enumPayOrderChannel.Cybersource)}}</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+            <div class="row align-items-center mt-3">
+              <div class="col-auto">
+                <button (click)="this.getComissionsTransactions()" class="btn btn-primary"
+                        style="background-color: #138FF1"
+                        type="button">Buscar
+                </button>
+              </div>
+              <div class="col"></div>
+              <div *ngIf="this.comissionsParent?.length>0" class="col-auto">
+                <button (click)="this.downloadXlsx()" class="buttonNuevo">
+                  <span>Descargar</span>
+                  <img src="assets/slices/exportar_xls.png">
+                </button>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div *ngIf="searched" class="col-md-12">
+                <mat-tab-group *ngIf="this.comissionsParent?.length > 0;else empty" animationDuration="0ms"
+                               class="example-stretched-tabs mat-elevation-z4"
+                               dynamicHeight mat-align-tabs="start"
+                               mat-stretch-tabs>
+                  <ng-template [ngForOf]="this.comissionsParent" let-item ngFor>
+                    <mat-tab label="{{item.name}}">
+                      <ng-template [ngForOf]="item.commissions" let-commission ngFor>
+                        <h4 class="font-weight-bold card--title m-3">{{commission.payChannelName}}</h4>
+                        <div class="card tabla__resultados m-3">
+                          <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                              <tr class="table--titulos">
+                                <th style="width: 10%;">Fecha</th>
+                                <th>Empresa</th>
+                                <th class="text-right" style="width: 15%;">Recaudo ({{this.commission.currency}})</th>
+                                <th *ngIf="this.isAdministrator" class="text-right" style="width: 15%;">Comisión x
+                                  Cobrar
+                                  ({{this.commission.currency}})
+                                </th>
+                                <th class="text-right" style="width: 15%;">Cargo al comercio
+                                  ({{this.commission.currency}})
+                                </th>
+                                <th *ngIf="this.isAdministrator" class="text-right" style="width: 15%;">Comisión canal
+                                  ({{this.commission.currency}})
+                                </th>
+                                <th *ngIf="this.isAdministrator" class="text-right" style="width: 17%;">Comisión
+                                  MULTIPAGO
+                                  ({{this.commission.currency}})
+                                </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr *ngFor="let itemCommission of commission.commissions;">
+                                <td>{{itemCommission.date}}</td>
+                                <td>{{itemCommission.service}}</td>
+                                <td class="text-right">{{itemCommission.collection_amount| number:'1.2-2'}}</td>
+                                <td *ngIf="this.isAdministrator"
+                                    class="text-right">{{itemCommission.commission_amount| number:'1.2-2'}}</td>
+                                <td class="text-right">{{itemCommission.charge| number:'1.2-2'}}</td>
+                                <td *ngIf="this.isAdministrator"
+                                    class="text-right">{{itemCommission.channel_commission| number:'1.2-2'}}</td>
+                                <td *ngIf="this.isAdministrator"
+                                    class="text-right">{{itemCommission.multipago_commission| number:'1.2-2'}}</td>
+                              </tr>
+                              </tbody>
+                              <tfoot>
+                              <tr class="font-weight-bold">
+                                <td colspan="2">Totales ({{this.commission.currency}})</td>
+                                <td class="text-right">{{commission.totalCollectionAmount| number:'1.2-2'}}</td>
+                                <td *ngIf="this.isAdministrator"
+                                    class="text-right">{{commission.totalCommissionAmount| number:'1.2-2'}}</td>
+                                <td class="text-right">{{commission.totalCharge| number:'1.2-2'}}</td>
+                                <td *ngIf="this.isAdministrator"
+                                    class="text-right">{{commission.totalChannelCommission| number:'1.2-2'}}</td>
+                                <td *ngIf="this.isAdministrator"
+                                    class="text-right">{{commission.totalMultipagoCommission| number:'1.2-2'}}</td>
+                              </tr>
+                              </tfoot>
+                            </table>
+                          </div>
+                        </div>
+
+
+                      </ng-template>
+                      <h4 class="font-weight-bold card--title m-3">RESUMEN</h4>
+                      <div class="card tabla__resultados m-3">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                            <tr class="table--titulos">
+                              <th>Moneda</th>
+                              <th class="text-right" style="width: 15%;">Recaudo</th>
+                              <th *ngIf="this.isAdministrator" class="text-right" style="width: 15%;">Comisión x
+                                Cobrar
+                              </th>
+                              <th class="text-right" style="width: 15%;">Cargo al comercio</th>
+                              <th *ngIf="this.isAdministrator" class="text-right" style="width: 15%;">Comisión
+                                canal
+                              </th>
+                              <th *ngIf="this.isAdministrator" class="text-right" style="width: 17%;">Comisión
+                                MULTIPAGO
+                              </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr *ngIf="item.totalBs>0">
+                              <td>En bolivianos (Bs)</td>
+                              <td class="text-right">{{item.totalBs| number:'1.2-2'}}</td>
+                              <td *ngIf="this.isAdministrator"
+                                  class="text-right">{{item.totalComissionBs| number:'1.2-2'}}</td>
+                              <td class="text-right">{{item.totalChargeBs| number:'1.2-2'}}</td>
+                              <td *ngIf="this.isAdministrator"
+                                  class="text-right">{{item.totalPayChannelComsnBs| number:'1.2-2'}}</td>
+                              <td *ngIf="this.isAdministrator"
+                                  class="text-right">{{item.totalMultipagoComsnBs| number:'1.2-2'}}</td>
+                            </tr>
+                            <tr *ngIf="item.totalSus>0">
+                              <td>En dólares ($us)</td>
+                              <td class="text-right">{{item.totalSus| number:'1.2-2'}}</td>
+                              <td *ngIf="this.isAdministrator"
+                                  class="text-right">{{item.totalComissionSus| number:'1.2-2'}}</td>
+                              <td class="text-right">{{item.totalChargeSus| number:'1.2-2'}}</td>
+                              <td *ngIf="this.isAdministrator"
+                                  class="text-right">{{item.totalPayChannelComsnSus| number:'1.2-2'}}</td>
+                              <td *ngIf="this.isAdministrator"
+                                  class="text-right">{{item.totalMultipagoComsnSus| number:'1.2-2'}}</td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </mat-tab>
+                  </ng-template>
+                </mat-tab-group>
+                <ng-template #empty>
+                  <div class="row  mt-3">
+                    <div class="col-12">
+                      <p>No se encontraron resultados para su criterio de búsqueda.</p>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+              <div *ngIf="!this.searched" class="col-12 mt-3">
+                <p>Presione el boton Buscar para obtener resultados.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

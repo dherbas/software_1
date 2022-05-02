@@ -1,0 +1,15 @@
+
+-------- STAGING -----------
+multipago cliente staging 1
+ng build
+Comprimir en ZIP todos los archivos que estan en: \validadofront\dist\FrontEnd-Validador
+cd /var/www/projects/validadorfront/
+rm -rf /var/www/projects/validadorfront/*
+copiar archivo validador .zip
+unzip FrontEnd-Validador.zip
+
+
+
+cd /var/www/projects/frontvalidador/
+rm -rf /var/www/projects/frontvalidador/*
+unzip FrontEnd-Validador.zip

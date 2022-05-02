@@ -1,0 +1,97 @@
+a:hover {
+  text-decoration: none;
+}
+
+.btn-img {
+  cursor: pointer;
+  border: 1px solid #dae0e8;
+  background: transparent !important;
+  border-radius: 5px !important;
+  margin-right: 2rem;
+}
+
+a.btn-img {
+  padding: .9rem .25rem;
+}
+
+button.btn-img {
+  padding: .3rem .25rem;
+}
+
+button:focus {
+  outline: none !important;
+}
+
+.btn-img span {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--darkblue);
+  padding: 0 .75rem;
+}
+
+.container-pay-channels {
+  border: 1px solid #dae0e8;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.container-subtitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--darkblue) !important;
+}
+
+.p-description {
+  font-size: 12px;
+  color: var(--gray);
+  padding-left: 30px;
+}
+
+.p-custom span {
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--lightblue);
+  text-decoration: underline;
+}
+
+.p-custom span:focus, .p-custom span:active {
+  color: var(--lightblue) !important;
+}
+
+.btn-outline-primary {
+  font-size: 14px !important;
+  color: var(--lightblue) !important;
+  border-color: var(--lightblue) !important;
+}
+
+.btn-outline-primary:hover {
+  color: #fff !important;
+  background-color: var(--lightblue) !important;
+  border-color: var(--lightblue) !important
+}
+
+/****************************/
+/* BLOCK UI OVERRIDE STYLES */
+/****************************/
+
+/* Block UI Wrapper (Backdrop) */
+div.block-ui-wrapper {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+/* Spinner */
+div.block-ui-wrapper .loader {
+  border-color: #fff; /* Circle color */
+  border-left-color: #174a84; /* Spinning section in circle color */
+}
+
+/* Message */
+div.block-ui-spinner .message {
+  color: #2d323e; /* Loading text color */
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.container-card-type {
+  padding: 10px 30px;
+}

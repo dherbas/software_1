@@ -1,0 +1,135 @@
+<h2 class="font-weight-bold card--title" style="color: #174a84;">{{this.titulo}} bolsa</h2>
+
+<form (ngSubmit)="onAccept()" [class.d-none]="consumeService" [formGroup]="formBolsa">
+  <div class="row mt-1">
+    <div *ngIf="errorMessage.length>0 && formSubmitted" class="col-12">
+      <p class="text-danger">{{this.errorMessage}}</p>
+    </div>
+    <div class="col-12">
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label pr-0" for="description">Descripción:</label>
+        <div class="col">
+          <input class="form-control" formControlName="description" id="description" name="description" type="text">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label pr-0" for="amount">Monto asignado (Bs.):</label>
+        <div class="col">
+          <input class="form-control text-right" currencyMask formControlName="amount" id="amount" name="amount"
+                 placeholder="0,00" type="text">
+        </div>
+      </div>
+      <div *ngIf="this.voucherPackage.id>0" class="form-group row">
+        <label class="col-md-4 col-form-label pr-0" for="amount">Monto utilizado (Bs.):</label>
+        <div class="col">
+          <label class="text-danger col-form-label ml-2">{{this.voucherPackage.amount_used|number:'1.2-2'}}</label>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label pr-0" for="expiration_date">Fecha de inicio:</label>
+        <div class="col">
+          <input class="form-control" formControlName="start_date" id="start_date"
+                 max="{{this.expirationDate | date:'yyyy-MM-dd'}}" min="{{this.startDate | date:'yyyy-MM-dd'}}"
+                 name="start_date" type="date">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label pr-0" for="expiration_date">Fecha fin:</label>
+        <div class="col">
+          <input class="form-control" formControlName="expiration_date" id="expiration_date"
+                 max="{{this.expirationDate | date:'yyyy-MM-dd'}}" min="{{this.startDate | date:'yyyy-MM-dd'}}"
+                 name="expiration_date" type="date">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3">
+    <button (click)="onCancel()" class="btn btn-dark-custom mr-4" type="button">
+      Cerrar
+    </button>
+
+    <button class="btn btn-primary-custom" type="submit">
+      Aceptar
+    </button>
+  </div>
+</form>
+
+
+<form (ngSubmit)="save()" [class.d-none]="!consumeService" [formGroup]="form">
+  <div class="row">
+    <div *ngIf="errorMessage.length>0 && formSubmitted" class="col-12">
+      <p class="text-danger m-0">{{this.errorMessage}}</p>
+    </div>
+  </div>
+  <div class="contenedor-subtitle mt-0"><span class="dot-subtitle"></span>
+    <span class="subtitle">Asignar contrato</span></div>
+  <div class="form-group row">
+    <div class="col-5">
+      <select class="form-control custom-select" formControlName="type" name="type">
+        <option value="{{searchByNro}}">Nro. de contrato</option>
+        <option value="{{searchByName}}">Empresa</option>
+      </select>
+    </div>
+    <div class="col-7 pl-0">
+      <input class="form-control form-control-custom" formControlName="search" name="search" type="text">
+    </div>
+  </div>
+  <div *ngIf="(businessVouchers| filter: Type.value: Search.value) as result" class="row">
+    <div *ngIf="result.length > 0" class="col-12">
+      <div class="card tabla__resultados">
+        <div class="table-responsive">
+          <table class="table table-fixed">
+            <thead>
+            <tr class="table--titulos">
+              <th style="width: 20%;text-align: center">Nro. de contrato</th>
+              <th style="width: 50%;">Empresa</th>
+              <th style="width: 20%;text-align: right;">Subtotal (Bs.)</th>
+              <th style="width: 10%">&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of result; let i= index">
+              <td style="width: 20%;text-align: center;">{{item.contract_number}}</td>
+              <td nowrap style="width: 50%">{{item.description}}</td>
+              <td align="right" style="width: 20%">{{item.sub_total | number: "1.2-2"}}</td>
+              <td style="width: 10%;">
+                <div class="custom-control custom-radio radio-custom custom-control-inline text-center">
+                  <input class="custom-control-input" formControlName="business_voucher" id="{{i+1}}"
+                         name="business_voucher" type="radio"
+                         value="{{item.contract_number}}">
+                  <label class="custom-control-label" for="{{i+1}}"></label>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="result.length===0 || businessVouchers.length==0" class="col-12">
+      <p class="px-0 text-secondary">No se encontraron resultados para su criterio de búsqueda.</p>
+    </div>
+  </div>
+  <div class="contenedor-subtitle">
+    <span class="dot-subtitle"></span><span class="subtitle">Asignar tiempo de validez</span></div>
+  <div class="form-group row">
+    <label class="col-3 col-form-label pr-0">Fecha de inicio:</label>
+    <div class="col-3 px-0">
+      <input class="form-control" formControlName="start_date"
+             max="{{this.expirationDate | date:'yyyy-MM-dd'}}" min="{{this.startDate | date:'yyyy-MM-dd'}}"
+             name="start_date" type="date">
+    </div>
+    <label class="col-2 col-form-label pr-0">Fecha fin:</label>
+    <div class="col-3 px-0">
+      <input class="form-control" formControlName="expiration_date"
+             max="{{this.expirationDate | date:'yyyy-MM-dd'}}" min="{{this.startDate | date:'yyyy-MM-dd'}}"
+             name="expiration_date" type="date">
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-12">
+      <button (click)="onCancel()" class="btn btn-dark-custom mr-4" type="button">Cerrar</button>
+      <button class="btn btn-primary-custom" type="submit">Aceptar</button>
+    </div>
+  </div>
+</form>

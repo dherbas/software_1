@@ -1,0 +1,14 @@
+#sidebar ul li.nav-span {
+  padding: 14px 14px 14px 20px;
+  background-color: #252a31;
+  font-weight: bold;
+  color: var(--secondary);
+}
+
+#sidebar ul li i {
+  padding: 8px 0;
+}
+
+#sidebarnav > li > a.dropdown-toggle:after {
+  display: none;
+}

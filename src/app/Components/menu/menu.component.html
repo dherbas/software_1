@@ -1,0 +1,43 @@
+<nav [ngClass]="{'active': this.isMenuVisible }" class="sticky-top" id="sidebar" style="min-height: 100vh;">
+  <div class="sidebar-header p-2">
+    <h3 class="text-center">
+      <img alt="" class="img-fluid" src="./assets/img/logo_m-oferta_menu.svg"/>
+    </h3>
+    <!-- <strong><img class="w-75" src="./assets/img/isologo.png" alt=""></strong> -->
+    <strong class="w-75">M</strong>
+  </div>
+
+  <ul class="list-unstyled pt-3">
+    <ng-container *ngFor="let parent_permission of this._permissions;">
+      <li (click)="selectedItem = parent_permission.id; selectedSubItem =null"
+          *ngIf="parent_permission.permissions?.length==0;else menu_child">
+        <a [routerLink]="[parent_permission.router_link]" class="text-light">
+          <i class="fas {{parent_permission.icon}} mr-3"></i>
+          <span class="text">{{parent_permission.name}}</span>
+        </a>
+      </li>
+      <ng-template #menu_child>
+        <li (click)="selectedItem = parent_permission.id">
+          <a class="dropdown-toggle text-light" data-toggle="collapse" href="{{parent_permission.router_link}}">
+            <span class="text">{{parent_permission.name}}</span>
+          </a>
+          <ul class="collapse list-unstyled" id="{{parent_permission.router_link|slice:1}}">
+            <ng-container *ngFor="let child_permission of parent_permission.permissions;">
+              <li *ngIf="child_permission.icon.length>0;else simple"
+                  [ngClass]="{'active': selectedSubItem === child_permission.id}">
+                <a (click)="selectedSubItem = child_permission.id"
+                   [ngClass]="{'text-light': selectedSubItem !== child_permission.id}"
+                   [routerLink]="[child_permission.router_link]">
+                  <i class="fas {{child_permission.icon}} mr-3"></i>
+                  <span>{{child_permission.name}}</span></a>
+              </li>
+              <ng-template #simple>
+                <li class="nav-span">{{child_permission.name}}</li>
+              </ng-template>
+            </ng-container>
+          </ul>
+        </li>
+      </ng-template>
+    </ng-container>
+  </ul>
+</nav>

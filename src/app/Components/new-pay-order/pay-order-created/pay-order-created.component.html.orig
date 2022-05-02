@@ -1,0 +1,231 @@
+<form (ngSubmit)="cerrar()" [formGroup]="form">
+  <div class="row">
+    <div class="col-12 text-left">
+      <span class="dialogo-titulo">Orden de pago</span>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="createdForm" class="col-12">
+      <p class="text-secondary pt-2">
+        Su orden de pago se generó correctamente
+      </p>
+    </div>
+    <div class="col-12 py-1">
+      <input
+        class="css-radio"
+        formControlName="type"
+        id="url"
+        name="type"
+        type="radio"
+        value="{{ PaymentURL }}"
+      />
+      <label class="css-label-radio" for="url">Obtener url de pago</label>
+
+      <input
+        class="css-radio"
+        formControlName="type"
+        id="pay"
+        name="type"
+        type="radio"
+        value="{{ PayOrderRightNow }}"
+      />
+      <label class="css-label-radio" for="pay">Pago prensencial</label>
+    </div>
+  </div>
+  <ng-template [ngIfElse]="payOrderRigthNow" [ngIf]="Type.value == PaymentURL">
+    <div class="row">
+      <div class="col-12 py-3">
+        <button (click)="copyMessage()" class="btn-img" type="button">
+          <img
+            height="35"
+            src="./assets/slices/btn_copiar_url.png"
+            title="Copiar URL"
+            width="35"
+          />
+          <span>Copiar URL</span>
+        </button>
+        <a class="btn-img" href="{{ URL_WHATSAPP }}" target="_newTab">
+          <img
+            height="35"
+            src="./assets/slices/btn_whatsapp.png"
+            title="Compartir URL"
+            width="35"
+          />
+          <span>Compartir URL</span>
+        </a>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #payOrderRigthNow>
+    <div class="row">
+      <div class="col-12">
+        <div class="container-pay-channels">
+          <div class="row" *ngIf="errorMessage.length > 0 && formSubmitted">
+            <div class="col-12">
+              <p style="font-size: 13px" class="text-danger">
+                {{ errorMessage }}
+              </p>
+            </div>
+          </div>
+          <ng-template [ngIfElse]="isSending" [ngIf]="!isSend">
+            <p class="container-subtitle">Seleccione el método de pago</p>
+            <div class="row pb-2">
+              <div class="col-12">
+<<<<<<< HEAD
+                <input
+                  class="css-radio"
+                  formControlName="payChannel"
+                  id="tarjeta_pos"
+                  name="payChannel"
+                  type="radio"
+                  value="{{ enumPayChannel.PayTarjetaPOS }}"
+                />
+                <label class="css-label-radio" for="tarjeta_pos"
+                  ><img src="./assets/slices/img_tarjetas.png"
+                /></label>
+                <div
+                  class="container-card-type"
+                  *ngIf="PayChannel.value == enumPayChannel.PayTarjetaPOS"
+                >
+                  <input
+                    class="css-radio"
+                    formControlName="cardType"
+                    id="typeChip"
+                    name="cardType"
+                    type="radio"
+                    value="{{ enumCardTransaction.TypeChip }}"
+                  />
+                  <label class="css-label-radio mb-0" for="typeChip"
+                    >Pagar Chip</label
+                  >
+                  <input
+                    class="css-radio"
+                    formControlName="cardType"
+                    id="typeCTL"
+                    name="cardType"
+                    type="radio"
+                    value="{{ enumCardTransaction.TypeCTL }}"
+                  />
+                  <label class="css-label-radio mb-0" for="typeCTL"
+                    >Pagar CTL</label
+                  >
+=======
+                <input class="css-radio" formControlName="payChannel" id="efectivo" name="payChannel" type="radio"
+                       value="{{enumPayChannel.Efectivo}}">
+                <label class="css-label-radio" for="efectivo">Efectivo</label>
+                <br>
+                <input class="css-radio" formControlName="payChannel" id="tarjeta_pos" name="payChannel" type="radio"
+                       value="{{enumPayChannel.PayTarjetaPOS}}">
+                <label class="css-label-radio" for="tarjeta_pos"><img src="./assets/slices/img_tarjetas.png"></label>
+                <div class="container-card-type" *ngIf="PayChannel.value == enumPayChannel.PayTarjetaPOS">
+                  <input class="css-radio" formControlName="cardType" id="typeChip" name="cardType" type="radio"
+                         value="{{enumCardTransaction.TypeChip}}">
+                  <label class="css-label-radio mb-0" for="typeChip">Pagar Chip</label>
+                  <input class="css-radio" formControlName="cardType" id="typeCTL" name="cardType" type="radio"
+                         value="{{enumCardTransaction.TypeCTL}}">
+                  <label class="css-label-radio mb-0" for="typeCTL">Pagar CTL</label>
+>>>>>>> 88f10ece6728898c4ff3c19f2d7a4b2715a450ca
+                </div>
+              </div>
+            </div>
+            <div class="row pb-2">
+              <div class="col-12">
+                <input
+                  class="css-radio"
+                  formControlName="payChannel"
+                  id="tigomoney"
+                  name="payChannel"
+                  type="radio"
+                  value="{{ enumPayChannel.PayTigoMoney }}"
+                />
+                <label class="css-label-radio" for="tigomoney"
+                  ><img src="./assets/slices/img_tigo.png"
+                /></label>
+                <p
+                  [class.d-block]="
+                    PayChannel.value == enumPayChannel.PayTigoMoney
+                  "
+                  class="p-description d-none"
+                >
+                  La notificación de pago se enviará al número de teléfono
+                  registrado en la orden
+                </p>
+              </div>
+            </div>
+            <div class="row pb-2">
+              <div class="col-12">
+                <input
+                  class="css-radio"
+                  formControlName="payChannel"
+                  id="qr"
+                  name="payChannel"
+                  type="radio"
+                  value="{{ enumPayChannel.PayQR }}"
+                />
+                <label class="css-label-radio" for="qr"
+                  ><img src="./assets/slices/img_qr.png"
+                /></label>
+                <p
+                  [class.d-block]="PayChannel.value == enumPayChannel.PayQR"
+                  class="p-description d-none"
+                >
+                  El código QR generado se enviará al correo electrónico
+                  registrado en la orden
+                </p>
+              </div>
+            </div>
+            <button
+              (click)="payment()"
+              class="btn btn-outline-primary my-2"
+              type="button"
+            >
+              Procesar
+            </button>
+          </ng-template>
+          <ng-template #isSending>
+            <p class="container-subtitle text-center">{{ title }}</p>
+            <div
+              *blockUI="'paymentProcess'"
+              class="text-center"
+              style="height: 140px"
+            >
+              <img
+                *ngIf="imageSRC.length > 0"
+                [src]="imageSRC | safeHtml"
+                height="{{ imageSize }}"
+                width="{{ imageSize }}"
+              />
+              <p class="p-description mx-0 my-2 px-2">
+                {{ description }}
+                <span *ngIf="descriptionTag.length > 0" class="font-blue">{{
+                  descriptionTag
+                }}</span>
+              </p>
+            </div>
+            <div *ngIf="processingError">
+              <p class="p-custom text-center">
+                <span (click)="retry()">Reintentar nuevamente</span>
+              </p>
+            </div>
+            <div *ngIf="forwardBCPQr">
+              <p class="p-custom text-center">
+                <span (click)="forwardBCPQrEmail()">Reenviar al correo</span>
+              </p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="row">
+    <div class="col-12 pt-4">
+      <button
+        (click)="dispose()"
+        class="btn btn-primary btn-blue"
+        type="submit"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+</form>

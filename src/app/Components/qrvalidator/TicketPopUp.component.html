@@ -1,0 +1,68 @@
+<div mat-dialog-content>
+    <div>
+        <h2 class="font-weight-bold card--title" style="color: #174a84;">Confirmación</h2>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span style="color: #73849E;">¿Está seguro que desea canjear el ticket?</span>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12" style="padding-left: 0px;">
+            <p class="row p_data">
+                <label class="col-3">Nro. orden:</label>
+                <label class="col-9" style="color: #73849E;">{{data.pay_order_number}}</label>
+            </p>
+            <p class="row p_data">
+                <label class="col-3">Nombre:</label>
+                <label class="col-9"
+                    style="color: #73849E;">{{ data.client_first_name + ' ' + data.client_last_name }}</label>
+            </p>
+            <p class="row p_data">
+                <label class="col-3" style="padding-right: 0px;">Monto (Bs.):</label>
+                <label class="col-9" style="color: #73849E;">{{ data.unitary_amount }}</label>
+            </p>
+            <p class="row p_data">
+                <label class="col-3">Concepto:</label>
+                <label class="col-9" style="color: #73849E; padding-right: 0px;">{{ data.concept }}</label>
+            </p>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="this.hasManilla()">
+        <div class="col-12 mt-3">
+            <span style="color: #73849E;">Ingrese el código de manilla asignada para confirmar</span>
+        </div>
+    </div>
+
+    <div class="row mt-3" *ngIf="this.hasManilla()">
+        <div class="form-group row col-12">
+            <label class="col-auto">Manilla 1:</label>
+            <div class="col-md-9 col-sm-12">
+                <input [(ngModel)]="this.manilla1" class="form-control" id="manilla1" name="manilla1" type="text" maxlength="10"/>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="this.hasManilla() && this.type_ticket == 1">
+        <div class="form-group row col-12">
+            <label class="col-auto">Manilla 2:</label>
+            <div class="col-md-9 col-sm-12">
+                <input [(ngModel)]="this.manilla2" class="form-control" id="manilla2" name="manilla2" type="text" maxlength="10"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-6" style="text-align: right;">
+            <button class="btn btn-primary mb-2" style="background-color:#174a84 ;width: 90%;" (click)="onNoClick();">
+                Cancelar
+            </button>
+        </div>
+        <div class="col-6" style="text-align: left">
+            <button type="submit" class="btn btn-primary mb-2" style="background-color:#138FF1;width: 90%;" (click)="onOkClick();">
+                Confirmar
+            </button>
+        </div>
+
+    </div>
+</div>

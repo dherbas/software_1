@@ -1,0 +1,53 @@
+export interface IReportPayOrderQR {
+  id: number;
+  service: string;
+  pay_order_number: number;
+  client_first_name: string;
+  client_last_name: string;
+  client_ci: string;
+  client_phone: string;
+  client_email: string;
+  extra_data: string;
+  currency: string;
+  total_amount: string;
+  transaction_number: null;
+  business_name: string;
+  nit: string;
+  pay_order_transaction_date: null;
+  pay_channel_id: null;
+  pay_channel_name: null;
+  pay_order_state_id: number;
+  pay_order_state_name: string;
+  pay_order_created: string;
+  invoiceNumber: number;
+  codControl: string;
+  invoiceDate: Date;
+  invoiceClientNit: string;
+}
+export class ReportPayOrderQR implements IReportPayOrderQR {
+  id: number;
+  service: string;
+  pay_order_number: number;
+  client_first_name: string;
+  client_last_name: string;
+  client_ci: string;
+  client_phone: string;
+  client_email: string;
+  extra_data: string;
+  currency: string;
+  total_amount: string;
+  transaction_number: null;
+  business_name: string;
+  nit: string;
+  pay_order_transaction_date: null;
+  pay_channel_id: null;
+  pay_channel_name: null;
+  pay_order_state_id: number;
+  pay_order_state_name: string;
+  pay_order_created: string;
+  created_by: string;
+  invoiceNumber: number;
+  codControl: string;
+  invoiceDate: Date;
+  invoiceClientNit: string;
+}

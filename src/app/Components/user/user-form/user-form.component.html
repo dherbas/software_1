@@ -1,0 +1,203 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">{{titulo}}</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="col-12 row">
+            <div class="container-fluid">
+              <div class="row">
+                <div *ngIf="mensageError.length> 0" class="lb-error da-pt-15px">
+                  {{mensageError}}
+                </div>
+              </div>
+
+              <section class="datos_usuario ">
+                <table class="tbDatos">
+                  <tbody>
+                  <tr>
+                    <td style="width: 80px;"></td>
+                    <td style="width: 350px;"></td>
+                    <td style="width: 20px;"></td>
+                    <td style="width: 130px;"></td>
+                    <td style="width: 350px;"></td>
+                  </tr>
+                  <tr>
+                    <td>Usuario:</td>
+                    <td>
+                      <input (keypress)="ValidarAlfanumerico($event)" [(ngModel)]="usuario.username"
+                             [disabled]="usuario.id>0"
+                             class="form-control ng-pristine ng-valid ng-touched" maxlength="30"
+                             type="text">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Nombre:</td>
+                    <td>
+                      <input (keypress)="ValidarAlfanumerico($event)" [(ngModel)]="usuario.first_name"
+                             class="form-control ng-pristine ng-valid ng-touched"
+                             maxlength="30" type="text">
+                    </td>
+                    <td></td>
+                    <td>Apellidos:</td>
+                    <td>
+                      <input (keypress)="ValidarAlfanumerico($event)" [(ngModel)]="usuario.last_name"
+                             class="form-control ng-pristine ng-valid ng-touched"
+                             maxlength="30" type="text">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Teléfono:</td>
+                    <td>
+                      <input (keypress)="ValidarNumerico($event)" [(ngModel)]="usuario.phone_number"
+                             class="form-control ng-pristine ng-valid ng-touched"
+                             maxlength="30" type="text">
+                    </td>
+                    <td></td>
+                    <td>Correo:</td>
+                    <td>
+                      <input [(ngModel)]="usuario.email" class="form-control ng-pristine ng-valid ng-touched"
+                             maxlength="60"
+                             type="text">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>CI:</td>
+                    <td>
+                      <input [(ngModel)]="usuario.ci" (keypress)="ValidarLetraNumero($event)"
+                             class="form-control ng-pristine ng-valid ng-touched"
+                             maxlength="15" type="text">
+                    </td>
+                    <td></td>
+                    <td>Login transaccional:</td>
+                    <td>
+                      <input [(ngModel)]="usuario.transactional_login" (keypress)="ValidarLetraNumero($event)"
+                             class="form-control ng-pristine ng-valid ng-touched"
+                             maxlength="20" [disabled]="disabledTransactionalLogin" type="text">
+                    </td>
+                  </tr>
+                  <tr [hidden]="!needDelivery">
+                    <td colspan="2">
+                      <input [(ngModel)]="isCheckedTypeUser" [disabled]="isDisabledProfile ? true : null"
+                             class="css-checkbox" id="da-check-cobrador" type="checkbox">
+                      <label *ngIf="isDisabledProfile; else isEnabledProfile" class="da-lb-13-03-r css-label"
+                             for="da-check-cobrador" style="color:#b9b3b3 !important">Es cobrador</label>
+                      <ng-template #isEnabledProfile>
+                        <label class="da-lb-13-03-r css-label" for="da-check-cobrador"
+                               style="color: #174a84; !important">Es cobrador</label>
+                      </ng-template>
+                    </td>
+                    <td></td>
+                    <td *ngIf="isCheckedTypeUser">Monto maximo diario:</td>
+                    <td *ngIf="isCheckedTypeUser">
+                      <input (keypress)="ValidarSoloNumeroyPunto($event)" [(ngModel)]="usuario.maximum_daily_amount" class="form-control ng-pristine ng-valid ng-touched"
+                             maxlength="7" type="text">
+                    </td>                    
+                  </tr>
+
+                  <tr *ngIf="listaEmpresas.length>1">
+                    <td>Empresas:</td>
+                    <td>
+                      <div class="contenedor-arbol" style="padding-left: 10px; width: 100%;height: 100px !important;">
+                        <div *ngFor="let item of listaEmpresas">
+                          <input (change)="checkEmpresa(item.code)" [(ngModel)]="item.isCheck" class="css-checkbox"
+                                 id="{{ 'chk-empresa-' + item.code }}" type="checkbox">
+                          <label class="da-lb-13-03-r css-label"
+                                 for="{{ 'chk-empresa-' + item.code }}">{{item.name}}</label>
+                        </div>
+                      </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <div [hidden]="isCheckedTypeUser" class="row">
+                <div class="col-4 contenedor-subtitle">
+                  <span class="dot-subtitle"></span>
+                  <span class="subtitle">Asignar perfiles</span>
+                </div>
+              </div>
+              <table [hidden]="isCheckedTypeUser">
+                <tr>
+                  <td style="width: 200px;"> Perfiles disponibles</td>
+                  <td style="width: 50px;"></td>
+                  <td style="width: 200px;">Perfiles asignados</td>
+                  <td style="width: 350px;">Funciones asignadas</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">
+                    <div class="contenedor-arbol">
+
+
+                      <ng-container *ngFor="let item of listaPerfilesDisponibles">
+                        <div #divPerfilesDisponibles (click)="seleccionarPerfilDisponible(item.id)"
+                             class="da-div-multiple"
+                             id={{item.id}}>
+                          <ng-container *ngIf="this.listaEmpresas.length==1">
+                            {{item.name}}
+                          </ng-container>
+                          <ng-container *ngIf="this.listaEmpresas.length>1">
+                            {{item.company_name}} - {{item.name}}
+                          </ng-container>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </td>
+                  <td style=" vertical-align: middle; padding: 15px 10px 0;">
+                    <div>
+                      <img (click)="pasarUno()" class="da-cu-pointer" src="./assets/slices/flecha_der.png">
+                      <img (click)="pasarTodos()" class="da-cu-pointer" src="./assets/slices/flecha_der2.png">
+                      <img (click)="quitarTodos()" class="da-cu-pointer" src="./assets/slices/flecha_izq2.png">
+                      <img (click)="quitarUno()" class="da-cu-pointer" src="./assets/slices/flecha_iza.png">
+                    </div>
+                  </td>
+                  <td style="vertical-align: top;">
+                    <div class="contenedor-arbol">
+                      <ng-container *ngFor="let item of listaPerfilesAsignados">
+                        <div #divPerfilesAsignados (click)="seleccionarPerfilAsignado(item.id)" class="da-div-multiple "
+                             id={{item.id}}>
+                          <ng-container *ngIf="this.listaEmpresas.length==1">
+                            {{item.name}}
+                          </ng-container>
+                          <ng-container *ngIf="this.listaEmpresas.length>1">
+                            {{item.company_name}} - {{item.name}}
+                          </ng-container>
+
+                        </div>
+                      </ng-container>
+                    </div>
+                  </td>
+                  <td style="vertical-align: top;">
+                    <div class="contenedor-arbol  da-arbol-permiso" style="width: 300px;">
+                      <app-arbol-permiso [id]="0" [serviceCode]="serviceCode"></app-arbol-permiso>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <div class="row da-pt-25px">
+                <div class="col-4 " style="padding-top: 15px;">
+                  <input [(ngModel)]="habilitado" class="css-checkbox" id="da-check-habidesa" type="checkbox">
+                  <label class="da-lb-13-03-r css-label" for="da-check-habidesa">Habilitar</label>
+                </div>
+              </div>
+              <div class="contenedor-botones">
+                <button (click)="cancelar()" class="btn btn-primary btn-blue">
+                  Cancelar
+                </button>
+                <button (click)="guardar()" class="btn btn-primary">
+                  {{accion}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

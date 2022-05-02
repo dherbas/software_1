@@ -1,0 +1,37 @@
+::ng-deep .mat-dialog-content {
+  max-height: 100%;
+}
+
+/*.table {
+  max-height: 30vh;
+  overflow: auto;
+  display: inline-block;
+}*/
+
+
+.table-fixed tbody {
+  height: auto;
+  max-height: 30vh;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.table-fixed thead,
+.table-fixed tbody,
+.table-fixed tr,
+.table-fixed td,
+.table-fixed th {
+  display: block;
+}
+
+.table-fixed tr:after {
+  content: "";
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+
+.table-fixed tbody td,
+.table-fixed thead > tr > th {
+  float: left;
+}

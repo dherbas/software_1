@@ -1,0 +1,63 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Editar parámetro</h2>
+      <div class="card shadow-sm mt-4 ">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <div *ngIf="(Value.dirty || Value.touched) && Value.invalid && Value.errors.required"
+                 class="col">
+              <p class="text-danger"> Debe ingresar un valor válido.</p>
+            </div>
+            <div *ngIf="(Description.dirty || Description.touched) && Description.invalid && Description.errors.required"
+                 class="col">
+              <p class="text-danger"> Debe ingresar una descripción válida.</p>
+            </div>
+
+            <form [formGroup]="updateForm">
+              <div *ngIf="this.services.length > 1" class="form-group row">
+                <label class="col-form-label col-auto mr-md-3">Empresa:</label>
+                <div class="col-md-4 col-sm-12">
+                  <ng-select2 formControlName="service_code"
+                              id="service_code" name="service_code" width="100%">
+                    <option *ngFor="let item of services" value="{{item.code}}">
+                      {{item.name}}</option>
+                  </ng-select2>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-auto mr-2">Parámetro:</label>
+                <div class="col-sm-12 col-md-4">
+                  <input class="form-control" formControlName="name" readonly type="text">
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-auto col-form-label" style="margin-right: 2.5rem !important;">Valor:</label>
+                <div class="col-sm-12 col-md-4">
+                  <input class="form-control" formControlName="value" type="text">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-auto col-form-label">Descripción:</label>
+                <div class="col-sm-12 col-md-4">
+                                    <textarea class="form-control" formControlName="description" rows="2"
+                                              style="resize: none;" type="text"></textarea>
+                </div>
+              </div>
+
+              <button (click)="onCancel();" class="btn btn-dark btn-lg mt-5 mr-4"
+                      style="background-color:#174a84;" type="button">Cancelar
+              </button>
+
+              <button (click)="updateParameter();" class="btn btn-primary btn-lg mt-5" style="background-color:#007bff;"
+                      type="button">Actualizar
+              </button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

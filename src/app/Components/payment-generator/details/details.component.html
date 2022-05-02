@@ -1,0 +1,172 @@
+<form (ngSubmit)="close()" action="">
+
+  <div class="col-12 text-left pd-left ">
+    <span class="dialogo-titulo">Detalle de la orden de pago</span>
+  </div>
+  <div>
+    <table class="table-form table-form-modal" style="width: 100%;">
+      <tr class="size">
+        <td style="width: 130px;"></td>
+        <td style="width: 150px;"></td>
+        <td style="width: 130px;"></td>
+        <td style="width: 150px;"></td>
+      </tr>
+      <tr>
+        <td><label> Nro. de orden:</label></td>
+        <td>
+          <label class="lb-description">{{ _payOrder.pay_official_number }}
+          </label>
+        </td>
+        <td class="new-data"><label> Fecha generada: </label></td>
+        <td>
+          <label class="lb-description">
+            {{ HGeneral.setDateFormat(_payOrder.pay_order_date, ',', '-') | date: "dd-MM-yyyy" }}
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Estado:</label></td>
+        <td>
+          <label class="lb-description">{{ _payOrder.status.name }}</label>
+        </td>
+        <td class="new-data"><label>Generado por :</label></td>
+        <td>
+          <label class="lb-description">{{ _payOrder.created_by }}</label>
+        </td>
+      </tr>
+      <tr *ngIf="_payOrder.status.id === 3">
+        <td><label>Motivo de anulación:</label></td>
+        <td>
+          <label class="lb-description">{{ _payOrder.status.summary }}</label>
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+
+    <div class="contenedor-subtitle" style="margin: 0;"><span class="dot-subtitle"></span><span class="subtitle">Datos
+        del cliente</span></div>
+    <table class="table-form table-form-modal" style="width: 100%;">
+      <tr class="size">
+        <td style="width: 130px;"></td>
+        <td style="width: 150px;"></td>
+        <td style="width: 130px;"></td>
+        <td style="width: 150px;"></td>
+      </tr>
+      <tr>
+        <td><label>Nombre(s):</label></td>
+        <td>
+          <label class="lb-description">{{ _payOrder.client_name }} </label>
+        </td>
+        <td class="new-data"><label>Apellidos: </label></td>
+        <td>
+          <label class="lb-description">
+            {{ _payOrder.client_last_name }}
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Carnet de identidad:</label></td>
+        <td>
+          <label class="lb-description">{{ _payOrder.client_ci }} </label>
+        </td>
+        <td class="new-data"><label>Teléfono/Celular: </label></td>
+        <td>
+          <label class="lb-description"> {{ _payOrder.client_phone }} </label>
+        </td>
+      </tr>
+      <tr>
+        <td><label> Correo electrónico: </label></td>
+        <td colspan="3">
+          <label class="lb-description"> {{ _payOrder.client_email }}</label>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Razón Social:</label></td>
+        <td>
+          <label class="lb-description"> {{ _payOrder.client_business_name }} </label>
+        </td>
+        <td class="new-data"><label> NIT: </label></td>
+        <td>
+          <label class="lb-description"> {{ _payOrder.client_nit }} </label>
+        </td>
+      </tr>
+      <tr>
+        <td><label> Observaciones: </label></td>
+        <td colspan="3">
+          <label class="lb-description"> {{ _payOrder.client_observation }} </label>
+        </td>
+      </tr>
+    </table>
+
+    <div class="contenedor-subtitle" style="margin: 0;"><span class="dot-subtitle"></span><span class="subtitle">Datos
+        de la orden de pago</span></div>
+    <div class="card tabla__resultados size-small" style="margin-bottom: 20px;">
+      <div class="table-responsivr">
+        <table class="table">
+          <tr class="table--titulos size-small">
+            <th>Nro.</th>
+            <th>Descripción</th>
+            <th>Precio unitario ({{this._currency}})</th>
+            <th>Cantidad</th>
+            <th>Total ({{this._currency}})</th>
+          </tr>
+          <tr *ngFor="let item of this._payOrder.pay_order_details; index as i">
+            <td scope="row">{{ i + 1 }}</td>
+            <td>{{ item.concept }}</td>
+
+            <ng-container *ngIf="this._currency == 'USD'; else elseTemplate">
+              <td  class="center">{{ item.original_unitary_amount | number: "1.2-2" }}</td>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <td  class="center">{{ item.unitary_amount | number: "1.2-2" }}</td>
+            </ng-template>
+
+
+
+
+            <td class="center">{{ item.quantity }}</td>
+
+            <ng-container *ngIf="this._currency == 'USD'; else elseTemplate">
+
+              <td class="right">{{ item.original_total_amount | number: "1.2-2" }}</td>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <td class="right">{{ item.total_amount | number: "1.2-2" }}</td>
+            </ng-template>
+
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <ng-container *ngIf="this._currency == 'USD'">
+      <div>
+
+        <label>Monto total ({{this._currency}}): </label>
+        <span class="lb-amount" style="margin-left: 10px;">
+          {{ _originaltotalAmount | number: "1.2-2" }}</span>
+      </div>
+    </ng-container>
+
+    <label>Monto total (Bs.): </label>
+    <span class="lb-amount" style="margin-left: 10px;">
+      {{ _totalAmount | number: "1.2-2" }}</span>
+
+
+
+
+
+
+    <div *ngIf="_payOrder.pay_order_sources_id==enumPayOrderSources.M_URL_DIRECTO">
+      <label>Pago directo con: </label>
+      <span style="margin-left: 10px;">{{_payOrder.pay_order_payments}}</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <button class="btn btn-primary btn-blue " type="submit">
+      Cerrar
+    </button>
+  </div>
+</form>

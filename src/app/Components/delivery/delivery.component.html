@@ -1,0 +1,165 @@
+<block-ui>
+    <div class="container-fluid mt-3">
+        <div class="col-lg-12">
+            <h2 class="font-weight-bold card--title">Servicios delivery</h2>
+            <div class="card shadow-sm mt-4">
+                <div class="card-body card--contenedor">
+                    <div class="container-fluid">
+                        <div *ngIf="this.companies.length> 1" class="form-group row">
+                            <label class="col-form-label col-auto">Empresas:</label>
+                            <div class="col-md-3 col-sm-8">
+                                <ng-select2 [(ngModel)]="selectedCompany" name="selectedCompany"
+                                    id="selectedCompany" [width]="250"
+                                    (change)="ActualizarData();">
+                                    <option *ngFor="let item of companies" value="{{item.code}}"
+                                        [attr.selected]="item == companies[0] ? true : null">
+                                        {{item.name}}</option>
+                                </ng-select2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-right">
+                                <button class="buttonNuevo" (click)="OpenAssignDelivery()">
+                                    <span>Asignar servicio</span>
+                                    <img src="assets/slices/ico_nuevo.png">
+                                </button>
+                            </div>
+                        </div>
+                        <div *ngIf="this.deliveryList.length == 0" class="row">
+                            <div class="col-12">
+                                <p class="p_data">
+                                    <span>No existe ningún servicio de DELIVERY asignado</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div *ngIf="this.deliveryList.length > 0" class="row">
+                            <div class="col-12">
+                                <div class="card tabla__resultados  mt-3">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead style="text-align: center;">
+                                                <tr class="table--titulos" style="padding: 1rem !important">
+                                                    <th style="min-width: 90%;text-align: left;">Servicio</th>
+                                                    <th style="min-width: 10%;">Quitar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of this.deliveryList">
+                                                    <td style="text-align: left;">
+                                                        <a>
+                                                            <img src="./assets/img/{{item.image}}"
+                                                                style="max-width: 40px;">
+                                                            <span class="p_data"
+                                                                style="color: #73849E;margin-left: 10px;">{{item.name}}</span>
+                                                        </a>
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        <img src="./assets/slices/quitar.png" title="habilitar"
+                                                            style="cursor:pointer" (click)="DeleteService(item)">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block-ui>
+<ngx-smart-modal #modalAssignDeliveries identifier="modalAssignDeliveries" [closable]="false"
+    [customClass]="'smartModal'">
+    <div style="width: 750px;">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="font-weight-bold card--title" style="color: #174a84;">Asignar servicio</h2>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-12">
+                <span class="p_data" style="color: #73849E;">Seleccione los servicios de DELIVERY a asignar</span>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-5">
+                <span class="p_data">Delivery disponibles</span>
+            </div>
+            <div class="col-2">
+
+            </div>
+            <div class="col-5">
+                <span class="p_data">Delivery asignados</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                <div style="min-height: 200px;min-width: 100%;border: 1px solid #73849E;border-radius: 10px;">
+                    <ul class="delivery-ul" multiple
+                        style="list-style-type: none;margin-left: 10px;margin-right: 10px;padding: 0px;">
+                        <li *ngFor="let item of availableList" style="margin-top: 10px;cursor: pointer;"
+                            (click)="SelectItem(item)"
+                            [ngClass]="item.selected ? 'delivery-selected' : '.delivery-selected'">
+                            <a>
+                                <img src="./assets/img/{{item.image}}" style="max-width: 40px;">
+                                <span class="p_data" style="color: #73849E;margin-left: 10px;">{{item.name}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-2" style="display: flex;justify-content: center;align-items: center;">
+                <div>
+                    <div>
+                        <img src="./assets/slices/flecha_der.png" (click)="MoveToAssigned();" title="Mover a la derecha"
+                            style="cursor: pointer;">
+                    </div>
+                    <div>
+                        <img src="./assets/slices/flecha_der2.png" title="Mover todos a la derecha"
+                            (click)="MoveAllToAssigned();" style="cursor: pointer;">
+                    </div>
+                    <div>
+                        <img src="./assets/slices/flecha_izq2.png" title="Mover a la izquierda"
+                            (click)="MoveAllToAvailable();" style="cursor: pointer;">
+                    </div>
+                    <div>
+                        <img src="./assets/slices/flecha_iza.png" title="Mover todos a la izquierda"
+                            (click)="MoveToAvailable();" style="cursor: pointer;">
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div style="min-height: 200px;min-width: 100%;border: 1px solid #73849E;border-radius: 10px;">
+                    <ul class="delivery-ul" multiple
+                        style="list-style-type: none;margin-left: 10px;margin-right: 10px;padding: 0px;">
+                        <li *ngFor="let item of assignedList" style="margin-top: 10px;cursor: pointer;"
+                            (click)="SelectItem(item)"
+                            [ngClass]="item.selected ? 'delivery-selected' : '.delivery-selected'">
+                            <a>
+                                <img src="./assets/img/{{item.image}}" style="max-width: 40px;">
+                                <span class="p_data" style="color: #73849E;margin-left: 10px;">{{item.name}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-6" style="text-align: right;">
+                <button class="btn btn-primary mb-2" style="background-color:#174a84 ;width: 50%;"
+                    (click)="closeModal();">
+                    Cancelar
+                </button>
+            </div>
+            <div class="col-6" style="text-align: left">
+                <button class="btn btn-primary mb-2" style="background-color:#138FF1;width: 50%;"
+                    (click)="AssignServices();">
+                    Confirmar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</ngx-smart-modal>

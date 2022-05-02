@@ -1,0 +1,87 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">{{titulo}}</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="col-sm-7">
+            <div class="form-group row">
+              <div *ngIf="mensageError.length> 0" class="col-12 text-danger">
+                {{mensageError}}
+              </div>
+            </div>
+
+            <div *ngIf="this.usuarioSession.list_code_service.length > 1" class="form-group row">
+              <label class="col-sm-3 col-form-label">Empresa:</label>
+              <div class="col-sm-9 pd-left">
+                <p *ngIf="perfil.id > 0; else seleccionEmpresa" class="col-sm-3 col-form-label" style="margin:0">
+                  {{perfil.company_name}}</p>
+                <ng-template #seleccionEmpresa>
+                  <select [(ngModel)]="selectedCompany" class="custom-select col-9" name="selectedCompany">
+                    <option *ngFor="let item of usuarioSession.list_code_service"
+                            [attr.selected]="item == usuarioSession.list_code_service[0] ? true : null"
+                            value="{{item.code}}">
+                      {{item.name}}</option>
+                  </select>
+
+                </ng-template>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">Nombre del perfil:</label>
+              <div class="col-sm-9 pd-left">
+                <input (keypress)="ValidarAlfanumerico($event)" [(ngModel)]="perfil.name"
+                       class="form-control ng-pristine ng-valid ng-touched"
+                       maxlength="30" type="text">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">Descripción:</label>
+              <div class="col-sm-9 pd-left">
+                <textarea (keypress)="ValidarAlfanumerico($event)" [(ngModel)]="perfil.description"
+                          class="form-control ng-pristine ng-valid ng-touched"
+                          id="da-ta-perfil" maxlength="100" name="da-ta-perfil"
+                          rows="3"></textarea>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-12 contenedor-subtitle">
+                <span class="dot-subtitle"></span>
+                <span class="subtitle">Asignar permisos</span>
+              </div>
+              <div class="col-12">
+                <p>Funciones disponibles</p>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-8">
+                <div class="contenedor-arbol da-arbol-permiso border rounded-lg" style="width: 400px; height: 450px !important;">
+                  <app-arbol-permiso [id]="id" [serviceCode]="selectedCompany"></app-arbol-permiso>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row mt-2">
+              <div class="col-12">
+                <input [(ngModel)]="habilitado" class="css-checkbox" id="check-habidesa" type="checkbox">
+                <label class="css-label" for="check-habidesa">Habilitar</label>
+              </div>
+            </div>
+            <div class="contenedor-botones">
+              <button (click)="cancelar()" class="btn btn-primary btn-blue">
+                Cancelar
+              </button>
+              <button (click)="guardar()" class="btn btn-primary">
+                {{accion}}
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

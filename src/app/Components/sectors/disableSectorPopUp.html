@@ -1,0 +1,32 @@
+<div mat-dialog-content>
+    <div>
+        <h2 class="font-weight-bold card--title" style="color: #174a84;">Confirmación</h2>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span style="color: #73849E;white-space: pre-line;">
+                {{this.message}}
+             </span>
+             <span style="color: #174a84;white-space: pre-line;">
+                {{this.boldMessage}}
+             </span>
+             <span style="color: #73849E;white-space: pre-line;">
+                {{this.questionMark}}
+             </span>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-6" style="text-align: right;">
+            <button class="btn btn-primary mb-2" style="background-color:#174a84 ;width: 90%;" (click)="onNoClick();">
+                Cancelar
+            </button>
+        </div>
+        <div class="col-6" style="text-align: left">
+            <button class="btn btn-primary mb-2" style="background-color:#138FF1;width: 90%;" (click)="onOkClick();">
+                Confirmar
+            </button>
+        </div>
+
+    </div>
+</div>

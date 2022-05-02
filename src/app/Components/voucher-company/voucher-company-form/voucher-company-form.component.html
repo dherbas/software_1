@@ -1,0 +1,51 @@
+<block-ui>
+  <form action="">
+    <div class="container-fluid">
+      <div class="row">
+        <h2 style="margin-left: 15px;" class="dialogo-titulo">{{titulo}}</h2>
+        <div class="lb-error da-pt-15px" *ngIf="mensageError.length> 0">
+          {{mensageError}}
+        </div>
+      </div>
+      <section class="datos_Empresa">
+        <table class="tbDatos" style="width: 100%;">
+          <tbody>
+            <tr *ngIf="services.length>1">
+              <td style="vertical-align: middle;">Empresa:</td>
+              <td>
+                <select id="service_code" name="service_code" class="custom-select form-control"
+                  [(ngModel)]="Empresa.service_code">
+                  <option *ngFor="let item of this.services" value="{{item.code}}"
+                    [attr.selected]="item.code == Empresa.service_code ? true : null">
+                    {{item.name}}</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: middle;font-size: 13px;">Empresa:</td>
+              <td>
+                <input [(ngModel)]="Empresa.name" autocomplete="off" name="name" style="vertical-align: middle;" type="text"
+                  class="form-control ng-pristine ng-valid ng-touched" maxlength="30"
+                  (keypress)="ValidarAlfanumerico($event)">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <div class="row da-pt-25px">
+        <div class="col-4" style="padding-top: 15px;">
+          <input [(ngModel)]="habilitado" name="habilitado" type="checkbox" id="da-check-habidesa" class="css-checkbox">
+          <label for="da-check-habidesa" class="da-lb-13-03-r css-label" style="font-size: 13px;">Habilitar</label>
+        </div>
+      </div>
+      <div class="contenedor-botones">
+        <button class="btn btn-primary btn-blue" (click)="cancel()" style="font-size: 13.6px;">
+          Cancelar
+        </button>
+        <button class="btn btn-primary" (click)="guardar()" style="font-size: 13.6px;">
+          {{accion}}
+        </button>
+      </div>
+    </div>
+  </form>
+</block-ui>

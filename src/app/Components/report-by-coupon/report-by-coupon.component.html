@@ -1,0 +1,144 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Resumen de ventas por vales</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <form (ngSubmit)="obtenerCupones()" class="mt-3">
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <input [(ngModel)]="typeSearch" [value]="this.enumTypeSearchReports.Vale" class="css-radio"
+                         id="pein-vale" name="pein-vale" type="radio">
+                  <label class="css-label-radio" for="pein-vale">Vale</label>
+                  <input [(ngModel)]="typeSearch" [value]="this.enumTypeSearchReports.Vale_Corporativo"
+                         class="css-radio" id="pein-vale-corp" name="pein-vale-corp" type="radio">
+                  <label class="css-label-radio" for="pein-vale-corp">Vale corporativo</label>
+                </div>
+              </div>
+              <div *ngIf="this.companies.length >1" class="form-group row">
+                <label class="col-form-label col-auto mr-3">Empresas:</label>
+                <div class="col-md-3 col-sm-8">
+                  <ng-select2 [(ngModel)]="selectedCompany" [width]="250"
+                              id="selectedCompany" name="selectedCompany">
+                    <option *ngFor="let item of companies" [attr.selected]="item == companies[0] ? true : null"
+                            value="{{item.code}}">
+                      {{item.name}}</option>
+                  </ng-select2>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-auto col-form-label">Fecha inicial:</label>
+                <div class="col-md-2 col-sm-4">
+                  <input [(ngModel)]="this.startDate" class="form-control" id="startDate" max="{{this.endDate}}"
+                         name="startDate" type="date"/>
+                </div>
+                <label class="col-auto col-form-label">Fecha final:</label>
+                <div class="col-md-2 col-sm-4">
+                  <input [(ngModel)]="this.endDate" class="form-control" id="endDate" min="{{this.startDate}}"
+                         name="endDate"
+                         type="date"/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col mt-2">
+                  <button class="btn btn-primary mb-2" style="background-color: #138FF1;" type="submit"> Consultar
+                  </button>
+                </div>
+              </div>
+
+            </form>
+
+            <div class="row pt-2">
+              <div *ngIf="this.listData.length > 0" class="col-12">
+                <h3 class="data_encontrada">Datos Encontrados</h3>
+                <div class="row">
+                  <div class="col-10">
+                    <div class="row">
+                      <div class="col-4" style="padding-right: 30px;">
+                        <p class="row p_data">
+                          <span class="col-7">Venta total (Bs.):</span>
+                          <span class="col-5 text-right"
+                                style="color: #73849E;">{{this.total_sale | number}}.00</span>
+                        </p>
+                        <p class="row p_data">
+                          <span class="col-7">Total usados (Bs.):</span>
+                          <span class="col-5 text-right"
+                                style="color: #73849E;">{{this.total_used | number}}.00</span>
+                        </p>
+                        <p class="row p_data">
+                          <span class="col-8">Total no usados (Bs.):</span>
+                          <span class="col-4 text-right"
+                                style="color: #73849E;">{{this.total_unused | number}}.00</span>
+                        </p>
+                      </div>
+                      <div class="col-4" style="padding-right: 30px;">
+                        <p class="row p_data">
+                          <span class="col-6" style="color: white;"></span>
+                          <span class="col-6 text-right" style="color: #73849E;"></span></p>
+                        <p class="row p_data">
+                          <span class="col-9">Total anulados (Bs.):</span>
+                          <span class="col-3 text-right"
+                                style="color: #73849E;">{{this.total_nulled | number}}.00</span>
+                        </p>
+                        <p class="row p_data">
+                          <span class="col-9">Total expirados (Bs.):</span>
+                          <span class="col-3 text-right"
+                                style="color: #73849E;">{{this.total_expired | number}}.00</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-2 text-right">
+                    <img (click)="descargar()" src="./assets/img/exportar_xls.png"
+                         style="cursor: pointer;"/>
+                  </div>
+                </div>
+
+                <div class="card tabla__resultados">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                      <tr class="table--titulos">
+                        <th scope="col">Nro.</th>
+                        <th scope="col">Monto del vale</th>
+                        <th class="text-center" scope="col">Venta total</th>
+                        <th class="text-center" scope="col">Usados</th>
+                        <th class="text-center" scope="col">No usados</th>
+                        <th class="text-center" scope="col">Anulados</th>
+                        <th class="text-center" scope="col">Expirados</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let item of this.listData; index as i">
+                        <th scope="row" style="font-weight: lighter;">{{i + 1}}</th>
+                        <td>{{item.concept}}</td>
+                        <td class="text-center">{{item.total_sale | number}}.00</td>
+                        <td class="text-center">{{item.used | number}}.00</td>
+                        <td class="text-center">{{item.non_used | number}}.00</td>
+                        <td class="text-center">{{item.nulled | number}}.00</td>
+                        <td class="text-center">{{item.expired | number}}.00</td>
+                      </tr>
+
+                      <tr class="table--titulos"
+                          style="font-size: 0.9rem !important; font-weight: bold;">
+                        <th colspan="2" scope="row">TOTALES</th>
+                        <td class="text-center">{{this.total_sale | number}}.00</td>
+                        <td class="text-center">{{this.total_used | number}}.00</td>
+                        <td class="text-center">{{this.total_unused | number}}.00</td>
+                        <td class="text-center">{{this.total_nulled | number}}.00</td>
+                        <td class="text-center">{{this.total_expired | number}}.00</td>
+                      </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

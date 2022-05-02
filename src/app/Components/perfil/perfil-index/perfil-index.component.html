@@ -1,0 +1,144 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Perfil</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <div *ngIf="this.usuarioSession.list_code_service.length> 1" class="form-group row">
+              <label class="col-form-label col-auto">Empresas:</label>
+              <div class="col-md-3 col-sm-8">
+                <ng-select2 [(ngModel)]="selectedCompany" name="selectedCompany" [width]="250"
+                            (change)="obtenerListado()">
+                  <option *ngFor="let item of this.usuarioSession.list_code_service" value="{{item.code}}"
+                          [attr.selected]="item == this.usuarioSession.list_code_service[0] ? true : null">
+                    {{item.name}}</option>
+                </ng-select2>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <input id="pein-todos" type="radio" class="css-radio" [(ngModel)]="radioSeleccionado" name="pein-radio3"
+                  [value]=this.enumEstado.Todos (change)="obtenerListado()">
+                <label for="pein-todos" class="css-label-radio">Todos</label>
+
+                <input id="pein-habilitado" type="radio" class="css-radio" [(ngModel)]="radioSeleccionado"
+                  name="pein-radio1" [value]=this.enumEstado.Habilitado (change)="obtenerListado()">
+                <label for="pein-habilitado" class=" css-label-radio">Habilitados</label>
+
+                <input id="pein-deshabilitado" type="radio" class="css-radio" [(ngModel)]="radioSeleccionado"
+                  name="pein-radio2" [value]=this.enumEstado.Deshabilitado (change)="obtenerListado()">
+                <label for="pein-deshabilitado" class=" css-label-radio">Deshabilitados</label>
+
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-6">
+                <div class="form-group has-search">
+                  <span class="fas fa-search form-control-feedback"></span>
+                  <input [(ngModel)]="textoCriterio" name="searchText" type="text" class="form-control"
+                    placeholder="Buscar">
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+
+              <div class="col-9">
+                <button (click)="obtenerListado()" type="button" style="background-color: #138FF1"
+                  class="btn btn-primary">
+                  Buscar
+                </button>
+              </div>
+              <div class="col-3 text-right">
+                <button class="buttonNuevo" (click)="perfil(0)">
+                  <span class="">Nuevo perfil</span>
+                  <img src="assets/slices/ico_nuevo.png">
+                </button>
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="card tabla__resultados" *ngIf="listaPerfiles.length> 0; else elsePerfil01">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr class="table--titulos">
+                          <th *ngIf="this.usuarioSession.list_code_service.length>1">
+                            Empresa
+                          </th>
+                          <th style="width: 30% !important">
+                            Perfil
+                          </th>
+                          <th style="width: 35% !important">
+                            Descripción
+                          </th>
+                          <!-- <th style="width: 10% !important">
+                            Ver
+                          </th> -->
+                          <th style="width: 10% !important" class="text-center">
+                            Editar
+                          </th>
+                          <th style="width: 10% !important">
+                            Estado
+                          </th>
+                        </tr>
+                      </thead>
+                      <ng-container
+                        *ngFor="let item of listaPerfiles | paginate: { itemsPerPage: _Paginador.ItemsPerPage, currentPage: _Paginador.CurrentPage }; let i= index">
+                        <tbody>
+                          <tr [ngClass]="{'da-bg-fil': i%2==0}">
+                            <td *ngIf="this.usuarioSession.list_code_service.length>1">
+                              {{item.company_name}}
+                            </td>
+                            <td>
+                              {{item.name}}
+                            </td>
+                            <td>
+                              {{metodoExtensionService.CortarCadena(item.description, 250)}}
+                            </td>
+                            <!-- <td class="ico">
+                                <img class="da-cu-pointer" src="assets/slices/ico_ver.png" (click)="ver(item.id)">
+                              </td> -->
+                            <td class="ico">
+                              <img [src]="'assets/slices/ico_editar.png'" [ngClass]="{'da-cu-pointer': true}"
+                                (click)="perfil(item.id)">
+                            </td>
+                            <td class="ico">
+                              <img *ngIf="item.status == enumEstado.Habilitado; else elseBlock" [src]="'assets/slices/ico_habilitar.png'"
+                                (click)="cambiarEstado(item.id, item.status, item.name) ">
+                              <ng-template #elseBlock>
+                                <img [src]="'assets/slices/ico_deshabilitar.png'"
+                                  (click)="cambiarEstado(item.id, item.status, item.name) ">
+                              </ng-template>
+                            </td>
+                            <!-- <td class="ico">
+                                <img [src]="item.estado==enumEstado.Habilitado ? 'assets/slices/ico_habilitar.png' : 'assets/slices/ico_deshabilitar.png'
+                                "[ngClass]="{'da-cu-pointer': true}" (click)="cambiarEstado(item.id, item.status, item.name)">
+                              </td> -->
+                          </tr>
+                        </tbody>
+                      </ng-container>
+                    </table>
+                    <div class="da-conetendor-paginacion">
+                      <pagination-controls (pageChange)="_Paginador.CurrentPage = $event" maxSize="8" autoHide="true"
+                        previousLabel="<" nextLabel=">">
+                      </pagination-controls>
+                    </div>
+                  </div>
+
+                </div>
+                <ng-template #elsePerfil01>
+                  <div>
+                    <label class="msg-no-data" style="padding-bottom: 16em;">{{mensageErrorListado}}</label>
+                  </div>
+                </ng-template>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

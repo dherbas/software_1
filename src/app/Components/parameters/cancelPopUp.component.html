@@ -1,0 +1,25 @@
+<div mat-dialog-content>
+    <div>
+        <h2 class="font-weight-bold card--title" style="color: #174a84;">Confirmación</h2>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-2">
+            <p style="color: #73849E;">¿Está seguro que desea cancelar la operación y volver a la lista de
+                parámetros?</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-3">
+
+            <button type="button" class="btn btn-primary mr-3" style="background-color:#174a84"
+                (click)="onCancelClick();">
+                Cancelar
+            </button>
+
+            <button type="button" class="btn btn-primary" style="background-color:#138FF1;" (click)="onAcceptClick();">
+                Aceptar
+            </button>
+
+        </div>
+    </div>
+</div>

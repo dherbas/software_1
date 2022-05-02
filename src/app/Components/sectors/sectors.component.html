@@ -1,0 +1,119 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Sectores</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <form (ngSubmit)="obtenerSectores()" class="mt-3">
+              <div class="form-group row" *ngIf="this.companies.length > 1">
+                <label class="col-form-label col-auto"
+                       style="margin-right: 4rem !important;">Empresas:</label>
+                <div class="col-md-3 col-sm-8">
+                  <ng-select2 [(ngModel)]="selectedCompany" name="selectedCompany"
+                              id="selectedCompany" [width]="250">
+                    <option *ngFor="let item of companies" value="{{item.code}}"
+                            [attr.selected]="item == companies[0] ? true : null">
+                      {{item.name}}
+                    </option>
+                  </ng-select2>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-auto">Buscar por concepto:</label>
+                <div class="col-md-3 col-sm-8">
+                  <input [(ngModel)]="this.searchText" name="searchText" type="text"
+                         class="form-control" placeholder="Buscar"></div>
+              </div>
+              <div class="row">
+                <div class="col mt-1">
+                  <button type="submit" style="background-color: #138FF1;" class="btn btn-primary">
+                    Consultar
+                  </button>
+                </div>
+              </div>
+            </form>
+            <!-- <div *ngIf="this.totalMovements > 0" class="row">
+            <div class="col-12">
+                <pagination-controls (pageChange)="p = $event" previousLabel="Anterior"
+                nextLabel="Siguiente"></pagination-controls>
+            </div>
+            </div> -->
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="card tabla__resultados">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead style="text-align: center;">
+                      <tr class="table--titulos">
+                        <th style="min-width: 100px;text-align: left;">Sector</th>
+                        <th style="min-width: 100px;">Monto (Bs.)</th>
+                        <th style="min-width: 100px;">Tiempo de uso inicial (días)</th>
+                        <th style="min-width: 100px;">Tiempo de validez (días)</th>
+                        <th style="min-width: 100px;">Visible en el portal</th>
+                        <th style="min-width: 50px;">Editar</th>
+                        <th style="min-width: 50px;">Url</th>
+                        <th style="min-width: 50px;">Estado</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let item of this.sectors" class="text-center">
+                        <td class="text-left">
+                          {{ item.name }}
+                        </td>
+                        <td>
+                          {{item.price}}
+                        </td>
+                        <td>
+                          {{item.sector_duration?.initial_day}}
+                        </td>
+                        <td>
+                          {{item.sector_duration?.final_day}}
+                        </td>
+                        <td *ngIf="item.visible_in_portal">
+                          Si
+                        </td>
+                        <td *ngIf="!item.visible_in_portal">
+                          No
+                        </td>
+                        <td *ngIf="item.enable">
+                          <img src="./assets/slices/ico_editar.png" style="cursor:pointer"
+                               (click)="editSector(item)">
+                        </td>
+                        <td *ngIf="item.enable">
+                          <img src="./assets/slices/ico_url.png" style="cursor:pointer"
+                               (click)="getSectorUrl(item)">
+                        </td>
+
+                        <td *ngIf="!item.enable">
+                          <img src="./assets/slices/ico_editar_desh.png"
+                               style="cursor:pointer">
+                        </td>
+                        <td *ngIf="!item.enable">
+                          <img src="./assets/slices/ico_url_desh.png"
+                               style="cursor:pointer">
+                        </td>
+                        <td *ngIf="item.enable">
+                          <img src="./assets/slices/ico_deshabilitar.png"
+                               title="deshabilitar" style="cursor:pointer"
+                               (click)="disableSector(item)">
+                        </td>
+                        <td *ngIf="!item.enable">
+                          <img src="./assets/slices/ico_habilitar.png" title="habilitar"
+                               style="cursor:pointer" (click)="disableSector(item)">
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

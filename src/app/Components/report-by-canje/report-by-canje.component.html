@@ -1,0 +1,130 @@
+<block-ui>
+    <div class="container-fluid mt-3">
+      <div class="col-lg-12">
+        <h2 class="font-weight-bold card--title">Registro de canjes</h2>
+        <div class="card shadow-sm mt-4">
+          <div class="card-body card--contenedor">
+            <div class="container-fluid">
+              <form (ngSubmit)="obtenerCanje()" class="mt-3">
+
+
+                <div class="form-group row">
+                  <label class="col-auto col-form-label">Fecha inicial:</label>
+                  <div class="col-md-2 col-sm-4">
+                    <input [(ngModel)]="this.startDate" class="form-control" id="startDate" max="{{this.endDate}}"
+                           name="startDate" type="date" style="padding:6px; width:144px;"/>
+                  </div>
+                  <label class="col-auto col-form-label">Fecha final:</label>
+                  <div class="col-md-2 col-sm-4" style="padding-left:17px;">
+                    <input [(ngModel)]="this.endDate" class="form-control" id="endDate" min="{{this.startDate}}"
+                           name="endDate" type="date" style="padding:6px; width:144px;"/>
+                  </div>
+                </div>
+
+                <div class="row mb-2">
+                    <label class="col-auto col-form-label">Búsqueda por:</label>
+                    <div class="col-md-2 col-sm-4" style="padding-left: 6px;">
+                      <select [(ngModel)]="this.typeSearch" class="form-control" id="selectedCompany" name="selectedCompany">
+                        <option value="1" selected>Nombre</option>
+                        <option value="2">Cédula</option>
+                        <option value="3">Concepto</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-4" style="padding: 0px;">
+                        <input class="form-control" [(ngModel)]="this.field" placeholder="Buscar" id="search" name="search" type="text"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                  <div class="col mt-4">
+                    <button class="btn btn-primary mb-2" style="background-color: #138FF1;" type="submit"> Consultar
+                    </button>
+                  </div>
+                </div>
+  
+              </form>
+  
+              <div class="row pt-2">
+                <div *ngIf="this.listData.length > 0" class="col-12">
+                  <h3 class="data_encontrada"><b>Datos Encontrados</b></h3>
+                  <div class="row">
+                    <div class="col-10">
+                      <div class="row">
+                        <div class="col-4" style="padding-left: 0px;">
+                          <p class="row p_data">
+                            <span class="col-6">Total vendidos:</span>
+                            <span class="col-6 text-left"
+                                  style="color: #73849E;">{{this.total_sale | number}}</span>
+                          </p>
+                          <p class="row p_data">
+                            <span class="col-6">Venta total (Bs.):</span>
+                            <span class="col-6 text-left"
+                                  style="color: #73849E;">{{this.total_sold | number}}.00</span>
+                          </p>
+                        </div>
+
+                        <div class="col-4" style="padding-left: 0px;">
+                          <p class="row p_data">
+                            <span class="col-6">Total canjeados:</span>
+                            <span class="col-6 text-left"
+                                  style="color: #73849E;">{{this.total_redeemed | number}}</span>
+                          </p>
+                          <p class="row p_data">
+                            <span class="col-6" style="padding-right: 0px;">Total sin canjear:</span>
+                            <span class="col-6 text-left"
+                                  style="color: #73849E;">{{this.total_unredeemed | number}}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-2 text-right">
+                      <img (click)="descargar()" src="./assets/img/exportar_xls.png"
+                           style="cursor: pointer;"/>
+                    </div>
+                  </div>
+  
+                  <div class="card tabla__resultados">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                        <tr class="table--titulos">
+                          <th class="text-center" scope="col">Nro.</th>
+                          <th scope="col">Nombre</th>
+                          <th class="text-center" scope="col">Cédula de identidad</th>
+                          <th class="text-center" scope="col">Teléfono</th>
+                          <th class="text-left" scope="col">Concepto</th>
+                          <th class="text-center" scope="col">Monto (Bs.)</th>
+                          <th class="text-center" scope="col">Canjeado</th>
+                          <th class="text-center" scope="col">Fecha y hora de canje</th>
+                          <th class="text-center" scope="col">Manilla asignada</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let item of this.listData; index as i">
+                            <th class="text-center" scope="row" style="font-weight: lighter;">{{i + 1}}</th>
+                            <td>{{item.clientName}}</td>
+                            <td class="text-center">{{item.clientCi}}</td>
+                            <td class="text-center">{{item.phone}}</td>
+                            <td>{{item.concept}}</td>
+                            <td class="text-right">{{item.amount | number}}.00</td>
+                            <td class="text-center" *ngIf="item.status == 1">
+                                <i class="fa fa-check"></i>
+                            </td>
+                            <td class="text-center" *ngIf="item.status != 1"></td>
+                            <td class="text-center">{{item.date}}</td>
+                            <td class="text-center">{{item.handles_code}}</td>
+                        </tr>
+  
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </block-ui>
+  

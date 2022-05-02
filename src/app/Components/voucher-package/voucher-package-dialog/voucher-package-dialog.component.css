@@ -1,0 +1,46 @@
+.btn-sm {
+  padding: 0.4rem 0 !important;
+  min-width: 100px !important;
+}
+
+.table th, .table td {
+  padding: 0.15rem 0.75rem !important;
+}
+
+::ng-deep .mat-dialog-content {
+  max-height: 100%;
+}
+
+
+.table-fixed tbody {
+  height: auto;
+  max-height: 100px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.table-fixed thead,
+.table-fixed tbody,
+.table-fixed tr,
+.table-fixed td,
+.table-fixed th {
+  display: block;
+}
+
+.table-fixed tr:after {
+  content: "";
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+
+.table-fixed tbody td,
+.table-fixed thead > tr > th {
+  float: left;
+}
+
+.table-fixed thead th {
+  vertical-align: middle !important;
+  display: flex;
+  height: 45px;
+}

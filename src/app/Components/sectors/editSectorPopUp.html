@@ -1,0 +1,76 @@
+<div mat-dialog-content>
+
+  <h2 class="font-weight-bold card--title" style="color: #174a84;">Editar sector</h2>
+
+  <div class="row mb-3 p_data">
+    <span class="col-3">Sector:</span>
+    <span class="col-9" style="color: #73849E;">{{ this.model.name }}</span>
+  </div>
+  <div class="row mb-3 p_data">
+    <span class="col-3 pr-0">Monto (Bs.):</span>
+    <span class="col-9" style="color: #73849E;">{{this.model.price}}</span>
+  </div>
+
+  <div class="row mb-3 p_data">
+    <label class="col-form-label col-6">Tiempo de uso inicial (días):</label>
+    <div class="col-6">
+      <input #initial_day class="form-control" type="text"
+             value="{{this.model.sector_duration_attributes.initial_day}}">
+    </div>
+
+  </div>
+  <div class="row mb-3 p_data">
+    <label class="col-form-label col-6">Tiempo de validez (días):</label>
+    <div class="col-6">
+      <input #final_day class=" form-control" type="text"
+             value="{{this.model.sector_duration_attributes.final_day}}">
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-auto">
+      <span class="p_data">Hacer visible en el portal de ofertas:</span>
+    </div>
+    <div class="col rad-selector p_data">
+      <div class="row">
+        <input #siRadio [checked]="this.model.visible_in_portal" id="visa" name="credit-card" style="display: none;"
+               type="radio" value="visa"/>
+        <label class="drinkcard-cc visa col-1" for="visa"></label>
+        <span class="col-2" style="padding-left: 0px; padding-top: 3px;">SI</span>
+        <span class="col-1"></span>
+        <input [checked]="!this.model.visible_in_portal" id="mastercard" name="credit-card" style="display: none;"
+               type="radio" value="visa"/>
+        <label class="drinkcard-cc mastercard col-1" for="mastercard"></label>
+        <span class="col-3" style="padding-left: 0px; padding-top: 3px;">NO</span>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-1">
+
+      <input #enable [checked]="this.model.enable" id="thing" name='thing' style="cursor: pointer;"
+             type='checkbox'/><label for="thing" style="height: 22px;
+                        width: 22px;
+                        cursor: pointer;"></label>
+
+    </div>
+    <div class="col-6">
+      <span class="p_data">Habilitar</span>
+    </div>
+
+  </div>
+  <div class="row mt-3">
+    <div class="col-6">
+      <button (click)="onNoClick();" class="btn btn-primary mb-2" style="background-color:#174a84;width: 90%;">
+        Cancelar
+      </button>
+    </div>
+    <div class="col-6">
+      <button (click)="onOkClick(initial_day.value, final_day.value, siRadio.checked, enable.checked);"
+              class="btn btn-primary mb-2"
+              style="background-color:#138FF1;width: 90%;">Confirmar
+      </button>
+    </div>
+
+  </div>
+</div>

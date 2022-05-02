@@ -1,0 +1,295 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Nueva generación de vales</h2>
+      <div class="card shadow-sm card-context">
+        <div class="card-body card--contenedor">
+          <div class="row">
+            <div class="col-12 pb-1">
+              <span class="lb-error ml-1">{{mensageError}}</span>
+            </div>
+          </div>
+          <form (ngSubmit)="saveVoucher()" class="col-12">
+            <table class="table-form table-data">
+              <tr class="size">
+                <td style="width: 140px;"></td>
+                <td style="width: 200px;"></td>
+                <td style="width: 150px;"></td>
+                <td style="width: 150px;"></td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Empresa de canje:</label>
+                </td>
+                <td>
+                  <label class="lb-description">
+                    {{package?.company_name}}
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Bolsa asignada:</label>
+                </td>
+                <td>
+                  <label class="lb-description">
+                    {{package?.description}}
+                  </label>
+                </td>
+                <td>
+                  <label>Saldo disponible (Bs.):</label>
+                </td>
+                <td>
+                  <label style="font-size: 16px; color: #138ff1 !important;">
+                    {{availableAmount | number: "1.2-2"}}
+                  </label>
+                </td>
+                <td>
+                  <label>Fecha fin:</label>
+                </td>
+                <td>
+                  <label style="font-size: 16px; color: #138ff1 !important;">
+                    {{ package?.expiration_date | date: "dd/MM/yyyy"}}
+                  </label>
+                </td>
+              </tr>
+            </table>
+            <div class="contenedor-subtitle" style="    margin-left: 5px;">
+              <span class="dot-subtitle">
+              </span><span class="subtitle">Datos del vale</span>
+            </div>
+
+            <table class="table-form">
+              <tr class="size">
+                <td style="width: 140px;"></td>
+                <td style="width: 200px;"></td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Monto a asignar (Bs.): </label>
+                </td>
+                <td>
+                  <input (input)="onchangeAmount($event.target.value)" [(ngModel)]="amoutPerVoucher"
+                         class="form-control"
+                         currencyMask name="amount" placeholder="0,00" type="text"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Fecha inicio: </label>
+                </td>
+                <td>
+                  <input [(ngModel)]="this.startDate" class="form-control" id="startDate"
+                         max="{{this.endDate | date:'yyyy-MM-dd'}}" min="{{minDate | date:'yyyy-MM-dd'}}"
+                         name="startDate" style="padding:0px;text-align: center;"
+                         type="date"/>
+                </td>
+
+                <td class="new-data">
+                  <label>Fecha fin: </label>
+                </td>
+                <td style="width: 200px;">
+                  <input [(ngModel)]="this.endDate" class="form-control" id="endDate"
+                         max="{{maxDate | date:'yyyy-MM-dd'}}" min="{{this.startDate | date:'yyyy-MM-dd'}}"
+                         name="endDate" style="padding:0px;text-align: center;"
+                         type="date"/>
+                </td>
+              </tr>
+            </table>
+
+            <div class="contenedor-subtitle" style="margin-left: 5px;">
+              <span class="dot-subtitle">
+              </span><span class="subtitle">Datos del beneficiario</span>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+              <label class="ml-1" style="font-size: 13px;">Tipo de asignación</label>
+              <div style="display: inline-block; margin-left: 30px;">
+                <input [(ngModel)]="asignacionIndividual" [value]=true class="css-radio" id="pein-individual"
+                       name="pein-individual" type="radio">
+                <label class=" css-label-radio" for="pein-individual">Individual</label>
+                <input [(ngModel)]="asignacionIndividual" [value]=false
+                       class="css-radio"
+                       id="pein-grupo" name="pein-grupo" type="radio">
+                <label class=" css-label-radio" for="pein-grupo">Por grupo</label>
+              </div>
+            </div>
+
+            <div *ngIf="asignacionIndividual">
+              <table class="table-form">
+                <tr class="size">
+                  <td style="width: 140px;"></td>
+                  <td style="width: 300px;"></td>
+                  <td style="width: 140px;"></td>
+                  <td style="width: 300px;"></td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>Nombre(s):</label>
+                  </td>
+                  <td>
+                    <input [(ngModel)]="newVoucher.first_name" class="form-control" maxlength="30" name="name"
+                           type="text"/>
+                  </td>
+                  <td class="new-data">
+                    <label>Apellido(s):</label>
+                  </td>
+                  <td>
+                    <input [(ngModel)]="newVoucher.last_name" class="form-control" maxlength="30" name="last_name"
+                           type="text"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>Cédula de identidad:</label>
+                  </td>
+                  <td>
+                    <input [(ngModel)]="newVoucher.ci" appOnlynumber class="form-control" maxlength="10" name="ci"
+                           type="text"/>
+                  </td>
+                  <td class="new-data">
+                    <label>Teléfono/Celular:</label>
+                  </td>
+                  <td>
+                    <input [(ngModel)]="newVoucher.phone_number" appOnlynumber class="form-control" maxlength="15"
+                           name="phone_number" type="text"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>Correo electrónico:</label>
+                  </td>
+                  <td>
+                    <input [(ngModel)]="newVoucher.email" class="form-control" maxlength="50" name="email"
+                           type="text"/>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+
+            <div *ngIf="asignacionIndividual==false">
+              <div style="display: flex; justify-content: space-between;">
+                <div>
+                  <input (change)="onFileChange($event)"
+                         accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                         id="fileExcel"
+                         style="display: none;" type="file"/>
+                  <label for="fileExcel" style="cursor: pointer;">
+                    Cargar lista de beneficiarios
+                    <img alt="" class="text-center" src="./assets/img/ico_cargar_excel.png"
+                         style="margin-left: 10px;">
+                  </label>
+                </div>
+                <div>
+                  <a href="assets/formato/Formato_vale.xlsx">
+                    <label style="cursor: pointer;">Descargar formato</label>
+                    <img src="./assets/img/exportar_xls.png" style="cursor: pointer;width: 35px; margin-left: 20px;"/>
+                  </a>
+                </div>
+              </div>
+
+              <!--TABLA CONCARGA DE EXCEL-->
+              <div *ngIf="listVoucher.length> 0" class="card tabla__resultados">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                    <tr class="table--titulos">
+                      <th style="width: 30%">
+                        Nombre
+                      </th>
+                      <th style="width: 20%;">
+                        Cédula de identidad
+                      </th>
+                      <th style="width: 20%;">
+                        Teléfono/Celular
+                      </th>
+                      <th style="width: 30%">
+                        Correo electrónico
+                      </th>
+
+                    </tr>
+                    </thead>
+                    <ng-container
+                      *ngFor="let item of listVoucher | paginate: { itemsPerPage: _Paginador.ItemsPerPage, currentPage: _Paginador.CurrentPage }; let i= index">
+                      <tbody>
+                      <tr>
+                        <td>
+                          {{item.first_name}} {{item.last_name}}
+                        </td>
+                        <td>
+                          {{item.ci}}
+                        </td>
+                        <td>
+                          {{item.phone_number}}
+                        </td>
+                        <td>
+                          {{item.email}}
+                        </td>
+                      </tr>
+                      </tbody>
+                    </ng-container>
+                  </table>
+                  <div class="da-conetendor-paginacion">
+                    <pagination-controls (pageChange)="_Paginador.CurrentPage = $event" autoHide="true" maxSize="8"
+                                         nextLabel=">" previousLabel="<">
+                    </pagination-controls>
+                  </div>
+                </div>
+              </div>
+              <!--END TABLA CONCARGA DE EXCEL-->
+              <!--TOTAL BENEFICIARIOS-->
+              <div *ngIf="listVoucher.length > 0" style="margin-top: 25px;">
+                <table class="table-form table-data">
+                  <tr class="size">
+                    <td style="width: 200px;"></td>
+                    <td style="width: 300px;"></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>Total beneficiarios cargados:</label>
+                    </td>
+                    <td>
+                      <label class="lb-description">
+                        {{listVoucher.length}}
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>Total monto a generar (Bs.):</label>
+                    </td>
+                    <td>
+                      <label class="lb-description" style="font-size: 16px;">
+                        {{listVoucher.length * amoutPerVoucher | number: "1.2-2"}}
+                      </label>
+                      <span *ngIf="!isTotalAmountOK()" class="lb-error">
+                        El monto excede al saldo disponible
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!--END TOTAL BENEFICIARIOS-->
+
+
+            </div>
+
+
+            <div class="col-12 p-0">
+              <div class="contenedor-botones">
+                <button (click)="cancel()" class="btn btn-primary btn-blue" type="button">
+                  Cancelar
+                </button>
+                <button class="btn btn-primary" type="submit">
+                  Aceptar
+                </button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

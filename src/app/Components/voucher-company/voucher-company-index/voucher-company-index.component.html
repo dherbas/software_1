@@ -1,0 +1,113 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Empresas externas</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12 lb-error" *ngIf="mensageError.length > 0">
+                {{ mensageError }}
+              </div>
+              <div class="col-12" *ngIf="services.length>1">
+                <div class="form-group row">
+                  <label class="col-form-label col-auto">Empresas:</label>
+                  <div class="col-md-3 col-sm-8">
+                    <ng-select2 id="service_code" name="service_code" [width]="250"
+                      [(ngModel)]="service_code" (change)="obtenerListado();">
+                      <option *ngFor="let item of services" value="{{item.code}}"
+                        [attr.selected]="item == services[0] ? true : null">
+                        {{item.name}}</option>
+                    </ng-select2>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12" style="padding-bottom: 1rem;"
+                [ngClass]="{'da-pt-35px': mensageError.length == 0, 'da-pt-20px': mensageError.length > 0}">
+                <input id="pein-todos" type="radio" class="css-radio" [(ngModel)]="radioSeleccionado" name="pein-radio3"
+                  [value]=enumEstado.Todos (change)="obtenerListado()">
+                <label for="pein-todos" class="da-lb-13-03-r css-label-radio da-mr-30px">Todos</label>
+                <input id="pein-habilitado" type="radio" class="css-radio" [(ngModel)]="radioSeleccionado"
+                  name="pein-radio1" [value]=enumEstado.Habilitado (change)="obtenerListado()">
+                <label for="pein-habilitado" class="da-lb-13-03-r css-label-radio da-mr-30px">Habilitados</label>
+                <input id="pein-deshabilitado" type="radio" class="css-radio" [(ngModel)]="radioSeleccionado"
+                  name="pein-radio2" [value]=enumEstado.Deshabilitado (change)="obtenerListado()">
+                <label for="pein-deshabilitado" class="da-lb-13-03-r css-label-radio da-mr-30px">Deshabilitados</label>
+              </div>
+            </div>
+
+            <div class="col-7" style="padding-left: 0%; padding-bottom: 1%;">
+              <div class="has-search">
+                <span class="fas fa-search form-control-feedback"></span>
+                <input [(ngModel)]="textoCriterio" name="searchText" type="text" class="form-control"
+                  placeholder="Buscar">
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-9">
+                <button type="button" style="background-color: #138FF1;" class="btn btn-primary"
+                  (click)="obtenerListado()">
+                  Consultar
+                </button>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12 text-right">
+                <button class="buttonNuevo" (click)="empresaM(0)">
+                  <span class="">Nueva empresa externa</span>
+                  <img width="11.75%" src="assets/slices/ico_nuevo.png">
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div *ngIf="listaEmpresas.length > 0; else elseEmpresa01" class="card tabla__resultados col-12"
+                  style="padding:0px">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr class="table--titulos" style="padding: 1rem !important">
+                          <th>Empresa</th>
+                          <th style="width: 45%;" *ngIf="services.length > 1">Empresa</th>
+                          <th style="width: 5%;">Editar</th>
+                          <th style="width: 5%;">Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let item of listaEmpresas | paginate: { itemsPerPage: _Paginador.ItemsPerPage, currentPage: _Paginador.CurrentPage }; let i = index">
+                          <td>{{ item.name }}</td>
+                          <td *ngIf="services.length > 1">{{item.company_name}}</td>
+                          <td class="ico">
+                            <img [src]="'assets/slices/ico_editar.png'" (click)="empresaM(item.id)">
+                          </td>
+                          <td class="ico">
+                            <img *ngIf="item.visible == 0; else elseNoVi"
+                              (click)="cambiarEstado(item.id, item.visible, item.name)"
+                              [src]="'assets/slices/ico_deshabilitar.png'">
+                            <ng-template #elseNoVi>
+                              <img [src]="'assets/slices/ico_habilitar.png'"
+                                (click)="cambiarEstado(item.id, item.visible, item.name) ">
+                            </ng-template>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="conetendor-paginacion">
+                    <pagination-controls (pageChange)="_Paginador.CurrentPage = $event" maxSize="8" autoHide="true"
+                      previousLabel="<" nextLabel=">">
+                    </pagination-controls>
+                  </div>
+                </div>
+                <ng-template #elseEmpresa01>
+                  <p class="lb-noDataResult">{{mensageErrorListado}}</p>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

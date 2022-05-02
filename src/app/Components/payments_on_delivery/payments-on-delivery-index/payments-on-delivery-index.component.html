@@ -1,0 +1,209 @@
+<block-ui>
+    <div class="container-fluid mt-3">
+      <div class="col-lg-12">
+        <h2 class="font-weight-bold card--title">Lista de ordenes de pago</h2>
+        <div class="card shadow-sm card-context">
+          <div class="card-body card--contenedor">
+            <div class="container-fluid">
+              <form (ngSubmit)="QueryMovements()" action="">
+                <div *ngIf="this.companies.length > 1" class="row mb-3">
+                  <div class="col-md-12">
+                    <label class="col-form-label mr-md-6">Empresas:</label>
+                    <ng-select2 (change)="changeCompany()" [(ngModel)]="selectedCompany" [width]="250"
+                                id="selectedCompany" name="selectedCompany">
+                      <option *ngFor="let item of companies" [attr.selected]="item == companies[0] ? true : null"
+                              value="{{item.code}}">
+                        {{item.name}}</option>
+                    </ng-select2>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <input [(ngModel)]="_filters.state" [value]=1 class="css-radio" id="pein-todos" name="pein-radio1"
+                           type="radio">
+                    <label class="css-label-radio" for="pein-todos">Todos</label>
+
+                    <input [(ngModel)]="_filters.state" [value]=2 class="css-radio" id="pein-pendientes"
+                           name="pein-radio2" type="radio">
+                    <label class="css-label-radio" for="pein-pendientes">Pendientes</label>
+
+                    <input [(ngModel)]="_filters.state" [value]=3 class="css-radio" id="pein-pagadas" name="pein-radio3"
+                           type="radio">
+                    <label class="css-label-radio" for="pein-pagadas">Pagadas</label>
+
+                    <input [(ngModel)]="_filters.state" [value]=4 class="css-radio" id="pein-anuladas" name="pein-radio4"
+                           type="radio">
+                    <label class="css-label-radio" for="pein-anuladas">Anuladas</label>
+
+                    <input [(ngModel)]="_filters.state" [value]=5 class="css-radio" id="pein-reservadas" name="pein-radio4"
+                           type="radio">
+                    <label class="css-label-radio" for="pein-reservadas">Reservadas</label>
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <label class="col-form-label col-md-auto mr-md-2">Fecha inicial:</label>
+                  <div action="" class="col-sm-12 col-md-3">
+                    <input [(ngModel)]="this._filters.startDate" class="form-control" id="startDate" max="{{this._filters.endDate}}"
+                           name="startDate" type="date"/>
+                  </div>
+                  <label class="col-form-label col-md-auto">Fecha final:</label>
+                  <div action="" class="col-sm-12 col-md-3">
+                    <input [(ngModel)]="this._filters.endDate" class="form-control" id="endDate" min="{{this._filters.startDate}}"
+                           name="endDate" type="date"/>
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <label class="col-form-label col-md-auto">Búsqueda por:</label>
+                  <div class="col-md-3 col-sm-12">
+                    <select (ngModelChange)="onChange($event)" [(ngModel)]="_filters.searchType" class="custom-select"
+                            id="searchType" name="searchType">
+                      <option value="1">Nro. de orden</option>
+                      <option value="2">Nombre cliente</option>
+                      <option value="3">CI</option>
+                      <option value="4">Por cobrador</option>
+                      <!-- <option value="4">Fecha de pago</option> -->
+                    </select>
+                  </div>
+                  <div class="col-md col-sm-12" *ngIf="searchInput">
+                    <div class="form-group has-search">
+                      <span class="fas fa-search form-control-feedback"></span>
+                      <input [(ngModel)]="_filters.searchText" class="form-control" name="searchText" placeholder="Buscar"
+                             type="text"/>
+                    </div>
+                  </div>
+
+                  <div class="col-md col-sm-12 mb-3" *ngIf="searchCombo">
+                    <select [(ngModel)]="_filters.searchUserApp" class="custom-select" id="searchUserApp" name="searchUserApp">
+                      <option value="">Seleccione un cobrador</option>
+                      <option *ngFor="let item of this.list_delivery; index as i" [value]="item.username">Usuario: {{ item.username }} | Nombre: {{ item.first_name }} {{ item.last_name }}</option>
+                    </select>
+                  </div>
+                  <!-- <div *ngIf="datesAreSelected" action="" class="form-inline col-4">
+                  <span class="label__date pr-2" style="padding-right: 4rem !important;">fecha inicial:</span>
+                  <input [(ngModel)]="this._filters.startDate" class="form-control" type="date" id="startDate"
+                    name="startDate" />
+                  <label for="startDate" class="pl-2"><span class="fa fa-calendar-alt"></span></label>
+                </div>
+                <div *ngIf="datesAreSelected" action="" class="form-inline col-4">
+                  <span class="label__date pr-2" style="padding-right: 4rem !important;">fecha final:</span>
+                  <input [(ngModel)]="this._filters.endDate" class="form-control" type="date" id="endDate"
+                    name="endDate" />
+                  <label for="endDate" class="pl-2"><span class="fa fa-calendar-alt"></span></label>
+                </div> -->
+                </div>
+                <div class="row mt-1">
+                  <div class="col-12">
+                    <button class="btn btn-primary mb-2" type="submit">
+                      Buscar
+                    </button>
+
+                    <div *ngIf="this.totalMovements>0" style="float: right;">
+                      <span (click)="downloadExcelFile()" style="cursor: pointer;">
+                        <span>
+                          Exportar
+                        </span>
+                        <img src="./assets/slices/exportar_xls.png " title="Descargar excel"/>
+                      </span>
+                      </div>
+                  </div>
+                </div>
+              </form>
+              <!-- table -->
+              <!--  -->
+              <div class="row">
+                <div class="col-12">
+                  <div *ngIf="this.totalMovements > 0; else NoDataResult" class="card tabla__resultados">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                        <tr class="table--titulos">
+                          <th scope="col">Nro Orden</th>
+                          <th scope="col">Nombre(s)</th>
+                          <th scope="col">Apellidos</th>
+                          <th scope="col">CI</th>
+                          <th scope="col">Teléfono/Celular</th>
+                          <th scope="col">Correo electrónico</th>
+                          <th scope="col">Monto total (Bs)</th>
+                          <th scope="col">Fecha generada</th>
+                          <th scope="col">Fecha transacción</th>
+
+                          <th scope="col" *ngIf="customCompany() else companyTemplate">Nro. de operación</th>
+                          <ng-template #companyTemplate>
+                            <th scope="col">Nro. transacción</th>
+                          </ng-template>
+
+                          <th scope="col">Estado</th>
+                          <th scope="col">Canal de pago</th>
+                          <th scope="col">Cobrador</th>
+                          <th class="td-small" scope="col">Ver</th>
+                          <th class="td-small" scope="col">Anular</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let item of this.movements; index as i">
+                          <td>{{ item.pay_order_number }}</td>
+                          <td>
+                            {{ item.client_first_name }}
+                          </td>
+                          <td>
+                            {{ item.client_last_name }}
+                          </td>
+                          <td>{{ item.client_ci }}</td>
+                          <td>{{ item.client_phone }}</td>
+                          <td style="width: 160px;">{{ item.client_email }}</td>
+                          <td class="center">
+                            {{ item.total_amount | number: "1.2-2" }}
+                          </td>
+                          <td>{{ HGeneral.setDateFormat(item.pay_order_created, ' ', '/') | date: "dd/MM/yyyy" }}</td>
+
+
+
+                          <td *ngIf="item.pay_order_transaction_date == null; else sinfecha">-----</td>
+                          <ng-template #sinfecha>
+                          <td>{{ HGeneral.setDateFormat(item.pay_order_transaction_date, ' ', '/') | date: "dd/MM/yyyy" }}</td>
+                          </ng-template>
+
+                          <td *ngIf="customCompany() else companyTemplate">{{ item.operation_number }}</td>
+                          <ng-template #companyTemplate>
+                            <td>{{ item.transaction_number }}</td>
+                          </ng-template>
+
+                          <td> {{ item.pay_order_state_name }} </td>
+                          <td> {{ item.pay_channel }} </td>
+                          <td> {{ item.created_by }} </td>
+
+                          <!-- <td class="icono td-small">
+                            <img (click)="urlViewer_Dialog(item.pay_order_number)" src="./assets/slices/ico_url.png "
+                                 title="Url"/>
+                          </td> -->
+                          <td class="icono td-small">
+                            <img (click)="
+                            descriptionPayOrder_Dialog(item.pay_order_number)
+                          " src="./assets/slices/ico_ver.png " title="Ver"/>
+                          </td>
+                          <td class="icono td-small">
+                            <img (click)="cancelPayOrder_Dialog(item.pay_order_number)" *ngIf="
+                            canCancel(item.pay_order_state_id);
+                            else cannotCancel
+                          " src="./assets/slices/ico_anular.png" title="Anular"/>
+                            <ng-template #cannotCancel>
+                              <img src="./assets/slices/ico_anular_desh.png" title="No se puede anular"/>
+                            </ng-template>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #NoDataResult>
+                  <p class="lb-noDataResult">{{MSG_HANDLE.NoData}}</p>
+                </ng-template>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </block-ui>

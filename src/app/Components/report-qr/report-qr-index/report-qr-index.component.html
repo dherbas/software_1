@@ -1,0 +1,120 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Reporte de órdenes de pago creadas por QR</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <form [formGroup]="form">
+              <div class="form-group row">
+                <label class="col-form-label col-md-1">Estado:</label>
+                <div class="col-sm-12 col-md-3">
+                  <select class="form-control" formControlName="status">
+                    <option value="{{this.enumTransactionStatus.Todos}}">Todos</option>
+                    <option value="{{this.enumTransactionStatus.Confirmado}}">Confirmada</option>
+                    <option value="{{this.enumTransactionStatus.Cancelada}}">Anulada</option>
+                    <option value="{{this.enumTransactionStatus.Error}}">Error</option>
+                  </select>
+                </div>
+                <label class="col-form-label col-md-auto">Fecha inicio:</label>
+                <div class="col-sm-12 col-md-2">
+                  <input class="form-control" formControlName="start_date" name="start_date" placeholder="dd/mm/yyyy"
+                         type="date">
+                </div>
+                <label class="col-form-label col-md-auto">Fecha fin:</label>
+                <div class="col-sm-12 col-md-2">
+                  <input class="form-control" formControlName="end_date" name="end_date" placeholder="dd/mm/yyyy"
+                         type="date">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-md-1">Empresa:</label>
+                <div class="col-sm-12 col-md-3">
+                  <ng-select2 [data]="this.serviceData" formControlName="service_id" style="width: 100%;" width="100%">
+                  </ng-select2>
+                </div>
+              </div>
+            </form>
+            <div class="row align-items-center mt-3">
+              <div class="col-auto">
+                <button (click)="this.getPayOrdersFromQR()" class="btn btn-primary"
+                        style="background-color: #138FF1" type="button">Buscar
+                </button>
+              </div>
+              <div class="col"></div>
+              <div *ngIf="this.transactions?.length > 0" class="col-auto">
+                <button (click)="this.downloadXlsx()" class="buttonNuevo">
+                  <span>Descargar</span>
+                  <img src="assets/slices/exportar_xls.png">
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div *ngIf="this.transactions?.length > 0;else empty" class="col-12">
+                <div class="card tabla__resultados">
+                  <div class="table-responsive">
+                    <table class="table tbQR">
+                      <thead>
+                      <tr class="table--titulos">
+                        <th scope="col" style="min-width: 50px;">Nro.</th>
+                        <th scope="col" style="min-width: 150px;">Servicio</th>
+                        <th scope="col">Nro. de orden</th>
+                        <th scope="col">Nombre(s)</th>
+                        <th scope="col">Apellidos</th>
+                        <th scope="col">C.I.</th>
+                        <th scope="col">Nit Cliente</th>
+                        <th scope="col">Teléfono/celular</th>
+                        <th scope="col">Correo electrónico</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Método de pago</th>
+                        <th scope="col">Nro. transaccional</th>
+                        <th scope="col">Monto total (Bs.)</th>
+                        <th scope="col">Fecha orden de pago</th>
+                        <th scope="col">Fecha factura creada</th>
+                        <th scope="col">Código de control</th>
+                        <th scope="col">Nro. Factura</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr
+                        *ngFor="let item of this.transactions | paginate: { itemsPerPage: pagination.ItemsPerPage, currentPage: pagination.CurrentPage };index as index;">
+                        <td>{{index + 1}}</td>
+                        <td>{{item.service}}</td>
+                        <td>{{item.pay_order_number}}</td>
+                        <td>{{item.client_first_name}}</td>
+                        <td>{{item.client_last_name}}</td>
+                        <td>{{item.client_ci}}</td>
+                        <td>{{item.invoiceClientNit}}</td>
+                        <td>{{item.client_phone}}</td>
+                        <td>{{item.client_email}}</td>
+                        <td>{{item.pay_order_state_name}}</td>
+                        <td>{{item.pay_channel_name}}</td>
+                        <td>{{item.transaction_number}}</td>
+                        <td>{{item.total_amount| number:'1.2-2'}}</td>
+                        <td>{{item.pay_order_transaction_date}}</td>
+                        <td>{{item.invoiceDate}}</td>
+                        <td>{{item.codControl}}</td>
+                        <td>{{item.invoiceNumber}}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="this.transactions?.length > 0" class="col-md-12">
+                <pagination-controls (pageChange)="this.pagination.CurrentPage = $event" autoHide="true" maxSize="8"
+                                     nextLabel=">" previousLabel="<">
+                </pagination-controls>
+              </div>
+              <ng-template #empty>
+                <div class="col-12 mt-3">
+                  <p>No se encontraron resultados para su criterio de búsqueda.</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

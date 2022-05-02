@@ -1,0 +1,62 @@
+<h2 class="font-weight-bold card--title" style="color: #174a84;">Asignar usuario</h2>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="lb-error da-pt-15px" *ngIf="mensageError.length> 0">
+      {{mensageError}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="formUser">
+        <div class="form-group row mb-0">
+          <label class="col-auto col-form-label">Empresa:</label>
+          <label class="col-auto col-form-label lbl-default">{{this.voucherCompany}}</label>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div *ngIf="this.users.length>0;else empty" class="card tabla__resultados">
+              <div class="table-responsive">
+                <table class="table table-fixed">
+                  <thead>
+                  <tr class="table--titulos">
+                    <th style="width: 24%;">Seleccionar</th>
+                    <th style="width: 25%;">Usuario</th>
+                    <th style="width: 50%;">Nombre completo</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of this.users">
+                    <td style="width: 24%;">
+                      <input class="css-radio" formControlName="choose" id="{{item.id}}" name="choose"
+                             type="radio" value="{{item.id}}">
+                      <label class="css-label-radio text-center" for="{{item.id}}"
+                             style="padding-left: 0px !important; margin-left: 20px;"></label>
+                    <td style="width: 25%;">{{item.username}}</td>
+                    <td style="width: 48%;">{{item.first_name}} {{item.last_name}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+          <ng-template #empty>
+            <div class="col-12">
+              <p>No existen usuarios para la empresa seleccionada</p>
+            </div>
+          </ng-template>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3">
+  <button (click)="onCancel()" class="btn btn-dark-custom mr-4" type="button">
+    Cerrar
+  </button>
+
+  <button (click)="asignarUsuario()" *ngIf="this.users.length>0" class="btn btn-primary-custom" type="button">
+    Asignar
+  </button>
+</div>

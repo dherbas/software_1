@@ -1,0 +1,55 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Parámetros</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <form [formGroup]="form">
+              <div *ngIf="this.services.length > 1" class="form-group row">
+                <label class="col-form-label col-auto">Empresas:</label>
+                <div class="col-md-4 col-sm-8">
+                  <ng-select2 (valueChanged)="updateServiceCode($event)"
+                              formControlName="service_code" id="service_code" name="service_code">
+                    <option *ngFor="let item of services" value="{{item.code}}">
+                      {{item.name}}</option>
+                  </ng-select2>
+                </div>
+              </div>
+            </form>
+            <div class="row">
+              <div class="col-12">
+                <div *ngIf="this.totalParameters > 0" class="card tabla__resultados">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                      <tr class="table--titulos" style="padding: 1rem !important">
+                        <th style="min-width: 100px;">Parámetro</th>
+                        <th style="min-width: 100px;">Valor</th>
+                        <th style="min-width: 100px;">Descripción</th>
+                        <th style="min-width: 50px;text-align: center;">Editar</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let item of this.parameters">
+                        <td>{{item.name}}</td>
+                        <td>{{item.value}}</td>
+                        <td>{{item.description}}</td>
+                        <td class="text-center">
+                          <a [routerLink]="['/backoffice/parametro/parametro',item.id]">
+                            <img src="./assets/slices/ico_editar.png">
+                          </a>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

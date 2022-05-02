@@ -1,0 +1,186 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Reporte de transacciones detallado</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <form [formGroup]="form">
+              <div class="form-group row">
+                <label [class.mr-md-custom-1-2]="this.isAdministrator || this.serviceCodeData.length>1"
+                       [class.mr-md-custom-3]="!this.isAdministrator && this.serviceCodeData.length==1"
+                       class="col-form-label col-md-auto ">Estado:</label>
+                <div class="col-sm-12 col-md-4">
+                  <select class="form-control" formControlName="status">
+                    <option value="{{this.enumTransactionStatus.Todos}}">Todos</option>
+                    <option value="{{this.enumTransactionStatus.Pendiente}}">Pendiente</option>
+                    <option value="{{this.enumTransactionStatus.Confirmado}}">Confirmado</option>
+                    <option value="{{this.enumTransactionStatus.Cancelada}}">Anulada</option>
+                    <option value="{{this.enumTransactionStatus.Error}}">Error</option>
+                    <option value="{{this.enumTransactionStatus.PendienteRespuesta}}">Pendiente de respuesta</option>
+                    <option value="{{this.enumTransactionStatus.Revertido}}">Revertido</option>
+                    <option value="{{this.enumTransactionStatus.Reservado}}">Reservado</option>
+                  </select>
+                </div>
+                <label class="col-form-label col-md-auto">Fecha de inicio:</label>
+                <div class="col-sm-12 col-md-2">
+                  <input class="form-control" formControlName="start_date" max="{{this.form.get('end_date').value}}"
+                         name="start_date"
+                         placeholder="dd/mm/yyyy" type="date">
+                </div>
+                <label class="col-form-label col-md-auto">Fecha fin:</label>
+                <div class="col-sm-12 col-md-2">
+                  <input class="form-control" formControlName="end_date" min="{{this.form.get('start_date').value}}"
+                         name="end_date"
+                         placeholder="dd/mm/yyyy" type="date">
+                </div>
+              </div>
+              <div class="form-group row">
+                <ng-template [ngIf]="this.isAdministrator">
+                  <label class="col-form-label col-md-auto">Empresas:</label>
+                  <div class="col-sm-12 col-md-4">
+                    <ng-select2 [data]="this.serviceData" formControlName="service_id" style="width: 100%;"
+                                width="100%">
+                    </ng-select2>
+                  </div>
+                </ng-template>
+                <ng-template [ngIf]="!this.isAdministrator && this.user.list_code_service.length>1">
+                  <label class="col-form-label col-md-auto">Empresas:</label>
+                  <div class="col-sm-12 col-md-4">
+                    <ng-select2 [data]="this.serviceCodeData" formControlName="service_code" style="width: 100%;"
+                                width="100%">
+                    </ng-select2>
+                  </div>
+                </ng-template>
+                <label [class.mr-md-2]="serviceCodeData.length>1 || isAdministrator"
+                       class="col-form-label col-md-auto">Búsqueda por:</label>
+                <div class="col-sm-12 col-md">
+                  <input class="form-control" formControlName="search" name="search" placeholder="Búsqueda por nota"
+                         type="text">
+                </div>
+              </div>
+            </form>
+            <div class="row align-items-center py-2">
+              <div class="col-auto">
+                <button (click)="this.getDetailedTransactions()" class="btn btn-primary"
+                        style="background-color: #138FF1" type="button">Buscar
+                </button>
+              </div>
+              <div class="col"></div>
+              <div *ngIf="this.transactions?.length > 0" class="col-auto">
+                <button (click)="this.downloadXlsx()" class="buttonNuevo">
+                  <span>Descargar</span>
+                  <img src="assets/slices/exportar_xls.png">
+                </button>
+              </div>
+            </div>
+            <section *ngIf="this.transactions.length>0" class="pt-3 pb-2" style="border-color: #dee2e6;border-style: solid;border-width: 1px 0 1px 0;">
+              <div class="row">
+
+                <div class="col-auto">
+                  <label>Total transacciones:</label>
+                </div>
+                <div class="col-auto">
+                  <span>{{this.transactions.length}}</span></div>
+                <div class="col-auto">
+                  <label>Total monto (Bs.):</label>
+                </div>
+                <div class="col-auto">
+                  <span>{{this.totalAmountBs| number:'1.2-2'}}</span></div>
+                <div class="col-auto">
+                  <label>Total monto ($us):</label>
+                </div>
+                <div class="col-auto">
+                  <span>{{this.totalAmountSus| number:'1.2-2'}}</span>
+                </div>
+              </div>
+            </section>
+
+            <div class="row mt-3">
+
+              <div *ngIf="this.transactions?.length>0 && this.searched" class="col-md-12 mt-2">
+                <pagination-controls (pageChange)="p = $event" nextLabel="Siguiente" previousLabel="Anterior">
+                </pagination-controls>
+              </div>
+              <ng-template [ngIf]="searched">
+                <div *ngIf="this.transactions?.length > 0;else empty" class="col-12">
+                  <div class="card tabla__resultados">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                        <tr class="table--titulos">
+                          <th scope="col">Nro.</th>
+                          <th scope="col">Transacción</th>
+                          <th scope="col">Empresa</th>
+                          <th scope="col">Descripción empresa</th>
+                          <th scope="col">Nota aclaratoria</th>
+                          <th scope="col">Código método de pago</th>
+                          <th scope="col">Lugar</th>
+                          <th scope="col">Movimiento</th>
+                          <th scope="col">Tipo</th>
+                          <th scope="col">Estado</th>
+                          <th scope="col">Fecha y hora creación</th>
+                          <th scope="col">Fecha y hora transacción</th>
+                          <th scope="col">Código cliente/CI</th>
+                          <th scope="col">NIT de empresa</th>
+                          <th scope="col">Nro. autorización</th>
+                          <th scope="col">Nro. factura</th>
+                          <th class="text-center" scope="col">Cantidad</th>
+                          <th scope="col">Glosa</th>
+                          <th scope="col">Nota</th>
+                          <th scope="col">Precio unitario</th>
+                          <th scope="col">Monto</th>
+                          <th scope="col">Moneda</th>
+                          <th scope="col">Canal de emisión</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr
+                          *ngFor="let item of this.transactions| paginate: { itemsPerPage: 10, currentPage: p };index as index;">
+                          <td>{{ 10 * (p - 1) + index + 1 }}</td>
+                          <td>{{item.pay_order_transaction}}</td>
+                          <td>{{item.service}}</td>
+                          <td style="min-width: 150px !important;">{{item.service_description}}</td>
+                          <td style="min-width: 120px !important;">{{item.disclaimer}}</td>
+                          <td style="min-width: 100px !important;">{{item.pay_channel_code}}</td>
+                          <td style="min-width: 120px !important;">{{item.place}}</td>
+                          <td>{{item.movement}}</td>
+                          <td>{{item.type}}</td>
+                          <td>{{item.pay_order_state}}</td>
+                          <td
+                            style="min-width: 120px !important;">{{item.pay_order_created_at |date:'dd/MM/yyyy HH:mm'}}</td>
+                          <td
+                            style="min-width: 120px !important;">{{item.pay_order_transaction_date |date:'dd/MM/yyyy HH:mm'}}</td>
+                          <td>{{item.client_ci}}</td>
+                          <td>{{item.company_nit}}</td>
+                          <td>{{item.authorization_number}}</td>
+                          <td>{{item.invoice_number}}</td>
+                          <td class="text-center">{{item.quantity}}</td>
+                          <td style="min-width: 180px !important;">{{item.concept}}</td>
+                          <td style="min-width: 250px !important;">{{item.note}}</td>
+                          <td class="text-right">{{item.unitary_amount| number:'1.2-2'}}</td>
+                          <td class="text-right">{{item.total_amount| number:'1.2-2'}}</td>
+                          <td>{{item.currency}}</td>
+                          <td>{{item.channel}}</td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #empty>
+                  <div class="col-12 mt-3">
+                    <p>No se encontraron resultados para su criterio de búsqueda.</p>
+                  </div>
+                </ng-template>
+              </ng-template>
+              <div *ngIf="!this.searched" class="col-12 mt-3">
+                <p>Presione el boton Buscar para obtener resultados.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

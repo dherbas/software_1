@@ -1,0 +1,27 @@
+<div class="container-fluid da-div-arbol-permiso" id="da-arbol-permiso">
+  <ng-template #itemTemplate class="inicio template" let-item="item" let-onCheckedChange="onCheckedChange"
+               let-onCollapseExpand="onCollapseExpand">
+    <div class="form-inline row-item">
+      <i (click)="onCollapseExpand()" *ngIf="item.children" [class.da-ico-down]="!item.collapsed" [class.da-ico-right]="item.collapsed"
+         aria-hidden="true"></i>
+      <i *ngIf="!item.children" class="da-ml-16px"></i>
+      <div class="form-check">
+        <input (ngModelChange)="onCheckedChange()" [(ngModel)]="item.checked" [disabled]="item.disabled" [indeterminate]="item.indeterminate"
+               class="form-check-input" hidden id="da-input-perfil-{{item.value}}"
+               type="checkbox"/>
+        <label [ngClass]="{
+            'desmarcado': !item.checked,
+            'marcado': item.checked,
+            'marcado-bloqueado': item.disabled && item.checked,
+            'indeterminado': item.indeterminate,
+            'indeterminado-bloqueado': item.disabled && item.indeterminate}" class="form-check-label" for="da-input-perfil-{{item.value}}">
+          <!-- (click)="item.checked = !item.checked; onCheckedChange()" Descomentar si se va a poder asignar permisos a un solo usuario -->
+          {{item.text}}
+        </label>
+      </div>
+    </div>
+  </ng-template>
+
+  <ngx-treeview (selectedChange)="onSelectedChange($event)" [itemTemplate]="itemTemplate" [items]="items">
+  </ngx-treeview>
+</div>

@@ -1,0 +1,184 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Asignar bolsa</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <form [formGroup]="form">
+              <div class="row">
+                <div class="col">
+                  <div *ngIf="this.services.length > 1" class="form-group row">
+                    <label class="col-form-label col-md-auto mr-md-5">Empresa:</label>
+                    <div class="col-sm-12 col-md-3">
+                      <p *ngIf="this.voucherPackageParent.id > 1; else multiempresa"
+                         class="col-sm-12 col-form-label lbl-default">
+                        {{this.voucherPackageParent.company_name}}</p>
+                      <ng-template #multiempresa>
+                        <select (change)="getVoucherCompanies()" class="custom-select"
+                                formControlName="service_code" id="service_code"
+                                name="service_code">
+                          <option *ngFor="let item of services" value="{{item.code}}">
+                            {{item.name}}
+                          </option>
+                        </select>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-form-label col-md-auto">Empresa externa:</label>
+                    <div class="col-sm-12 col-md-3">
+                      <select (change)="seleccionarUsuario()" class="custom-select form-control"
+                              formControlName="voucher_company_id" name="voucher_company_id">
+                        <option *ngIf="this.voucherPackageParent.id==0" disabled hidden
+                                selected value="0">Seleccionar
+                        </option>
+                        <option *ngFor="let item of this.voucherCompanies|keyvalue"
+                                value="{{item.key}}">{{item.value}}
+                        </option>
+                      </select>
+                    </div>
+                    <label class="col-form-label col-md-auto ml-md-5">Usuario:</label>
+                    <div class="input-group col-sm-12 col-md-3">
+                      <input class="form-control" formControlName="username" name="username"
+                             type="text"
+                             value="{{this.voucherPackageParent.user_account.username}}">
+                      <div [hidden]="this.voucherPackageParent.id>0"
+                           class="input-group-append pl-2">
+                        <button (click)="dialogoUsuario()" [disabled]="disableSelectUser" class="btn btn-image"
+                                type="button"></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="this.voucherPackageParent.user_account?.id>0" class="row">
+                <div class="col">
+                  <div class="form-group row mb-0">
+                    <label class="col-md-auto col-sm-4 mr-md-custom">Nombre(s):</label>
+                    <p class="col-md-3 col-sm-8 lbl-default">
+                      {{this.voucherPackageParent.user_account.first_name}}</p>
+                    <label class="col-md-auto col-sm-4 ml-md-5">Apellido(s):</label>
+                    <p class="col-md-3 col-sm-8 lbl-default ml-md-custom-2">
+                      {{this.voucherPackageParent.user_account.last_name}}</p>
+                  </div>
+                  <div class="form-group row mb-0">
+                    <label class="col-md-auto col-sm-4">Teléfono/Celular:</label>
+                    <p class="col-md-3 col-sm-8 lbl-default">
+                      {{this.voucherPackageParent.user_account.phone_number}}</p>
+                    <label class="col-md-auto col-sm-4 ml-md-5">Correo
+                      electrónico:</label>
+                    <p class="col-md-3 col-sm-8 lbl-default">
+                      {{this.voucherPackageParent.user_account.email}}</p>
+                  </div>
+                </div>
+                <div class="col-12 contenedor-subtitle mb-0">
+                  <span class="dot-subtitle"></span>
+                  <span class="subtitle">Bolsas asignadas</span>
+                </div>
+                <div class="col-12 text-right">
+                  <button (click)="dialogoBolsa(0)" class="buttonNuevo">
+                    <span>Nueva bolsa</span>
+                    <img src="assets/slices/ico_nuevo.png">
+                  </button>
+                </div>
+                <div *ngIf="this.voucherPackages.length>0;else empty" class="col-12">
+                  <div class="card tabla__resultados">
+                    <div class="table-custom table-responsive">
+                      <table class="table">
+                        <thead>
+                        <tr class="table--titulos text-center">
+                          <th style="width: 26%;text-align: left;">Descripción</th>
+                          <th style="width: 14%;text-align: right;">Monto asignado (Bs.)
+                          </th>
+                          <th style="width: 14%;text-align: right;">Monto utilizado (Bs.)
+                          </th>
+                          <th style="width: 12%;">Fecha de registro</th>
+                          <th style="width: 12%;">Fecha de inicio</th>
+                          <th style="width: 12%;">Fecha fin</th>
+                          <th style="width: 5%;">Editar</th>
+                          <th style="width: 5%;">Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let item of this.voucherPackages">
+                          <td>{{item.description}}</td>
+                          <td class="text-right">{{item.amount  | number:'1.2-2'}}</td>
+                          <td class="text-danger text-right">
+                            {{item.amount_used| number:'1.2-2'}}
+                          </td>
+                          <td class="text-center">{{item.created_at|date:'dd/MM/yyyy'}}
+                          </td>
+                          <td class="text-center">
+                            {{item.start_date |date:'dd/MM/yyyy'}}
+                          </td>
+                          <td class="text-center">
+                            {{item.expiration_date |date:'dd/MM/yyyy'}}
+                          </td>
+                          <td class="text-center">
+                            <img (click)="dialogoBolsa(item.id)"
+                                 *ngIf="item.id>0; else new_vp"
+                                 src="./assets/slices/ico_editar.png"
+                                 style="cursor: pointer;">
+                            <ng-template #new_vp>
+                              <img (click)="dialogoBolsa(item.id_temporary,true)"
+                                   src="./assets/slices/ico_editar.png"
+                                   style="cursor: pointer;">
+                            </ng-template>
+                          </td>
+                          <td class="text-center" style="width: 5%;">
+                            <img
+                              (click)=" dialogoBolsaEstado(item.id>0?item.id:item.id_temporary,item.description,item.status)"
+                              *ngIf="item.status; else vp_deshabilitado"
+                              src='./assets/slices/ico_habilitar.png'
+                              style="cursor: pointer;">
+                            <ng-template #vp_deshabilitado>
+                              <img
+                                (click)=" dialogoBolsaEstado(item.id>0?item.id:item.id_temporary,item.description,item.status)"
+                                src='./assets/slices/ico_deshabilitar.png'
+                                style="cursor: pointer;">
+                            </ng-template>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="form-group row pt-4">
+                    <label class="col-auto">Total monto asignado (Bs.):</label>
+                    <p class="col-auto lbl-default mr-md-3">{{this.totalAmount|number:'1.2-2'}}</p>
+                    <label class="col-auto">Total monto utilizado (Bs.):</label>
+                    <p class="col-auto text-danger">{{this.totalAmountUsed|number:'1.2-2'}}</p>
+                  </div>
+                </div>
+                <ng-template #empty>
+                  <div class="col-12">
+                    <p>No existe ninguna bolsa asignada</p>
+                  </div>
+                </ng-template>
+              </div>
+              <div class="row mt-3">
+                <div class="col">
+                  <input class="css-checkbox" formControlName="status" id="status" name="status"
+                         type="checkbox">
+                  <label class="css-label" for="status">Habilitar</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col mt-4">
+                  <button (click)="onCancel();" class="btn btn-dark-custom btn-lg mr-4"
+                          type="button">Cancelar
+                  </button>
+                  <button (click)="guardar();" [disabled]="this.voucherPackages.length==0"
+                          class="btn btn-primary btn-lg" style="background-color:#007bff;"
+                          type="button">{{this.btnSubmit}}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

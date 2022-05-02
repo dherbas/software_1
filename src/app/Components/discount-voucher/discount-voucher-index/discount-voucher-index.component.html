@@ -1,0 +1,190 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Generar vales</h2>
+      <div class="card shadow-sm card-context">
+        <div class="card-body card--contenedor">
+          <div>
+            <form (ngSubmit)="queryVouchers()" action="">
+
+              <div class="">
+                <div class="col-12">
+
+                  <input (change)="onFilterChange($event.target.value)" [value]=enumVoucher.All class="css-radio" checked id="pein-todos" name="pein-radio"
+                         type="radio" >
+                  <label class=" css-label-radio" for="pein-todos">Todos</label>
+
+                  <input (change)="onFilterChange($event.target.value)" [value]=enumVoucher.Used class="css-radio" id="pein-usado" name="pein-radio"
+                         type="radio">
+                  <label class=" css-label-radio" for="pein-usado">Usados</label>
+
+                  <input (change)="onFilterChange($event.target.value)" [value]=enumVoucher.NoUsed class="css-radio" id="pein-no-usado"
+                         name="pein-radio" type="radio">
+                  <label class=" css-label-radio" for="pein-no-usado">No usuados</label>
+
+                  <input (change)="onFilterChange($event.target.value)" [value]=enumVoucher.Canceled class="css-radio" id="pein-anulado"
+                         name="pein-radio" type="radio">
+                  <label class=" css-label-radio" for="pein-anulado">Anulados</label>
+
+                  <input (change)="onFilterChange($event.target.value)" [value]=enumVoucher.Expired class="css-radio" id="pein-expired"
+                         name="pein-radio" type="radio">
+                  <label class=" css-label-radio" for="pein-expired">Vencido</label>
+
+                </div>
+                <div class="row mt-3 mb-2 col-12">
+                  <div class="col-auto" style="padding-right: 0;">
+                    <div class="form">
+                      <label style="margin-right: 20px;">Bolsa asignada: </label>
+                      <select (change)="changePackage()" [(ngModel)]="_filters.id_package_voucher" class="custom-select"
+                              id="selectedPackage" name="selectedPackage" style="width: 270px;">
+                        <option *ngFor="let item of _listPackageVoucher" [attr.selected]="item == _listPackageVoucher[0] ? true : null"
+                                value="{{item.id}}">
+                          {{item.description}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="form-group has-search">
+                      <span class="fas fa-search form-control-feedback"></span>
+                      <input [(ngModel)]="_filters.search" class="form-control" name="searchText" placeholder="Búsqueda por nombre"
+                             type="text"/>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="col-3">
+                    <button class="btn btn-primary mb-2" type="submit">
+                      Buscar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <section class="col-12">
+              <div class=" d-flex justify-content-between" style="border-bottom: 1px solid #dee2e6;">
+                <div class="d-flex">
+                  <h2 style="font-weight: 700;">
+                    {{packageSelected?.description}}
+                  </h2>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <div>
+                    <button (click)="this.downloadXlsx()" class="buttonNuevo">
+                      <span>Descargar lista</span>
+                      <img src="assets/img/ico_cargar_excel.png">
+                    </button>
+                  </div>
+                  <div>
+                    <button *ngIf="packageSelected?.expiration_date >= today"  [routerLink]="['/backoffice/generar-vales/' , this._filters.id_package_voucher]" class="buttonNuevo"
+                            style="padding-left: 40px;">
+                      <span>Nueva generación de vales</span>
+                      <img src="assets/slices/ico_nuevo.png">
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </section>
+            <section *ngIf="packageSelected?.id>0" class="row col-12" name="data-company"
+                     style="padding-right: 0; margin:20px 0">
+              <div class="col-3" style="padding: 0;">
+                <label style="margin-right: 20px;">Empresa de canje:</label>
+                <span>{{packageSelected.company_name}}</span>
+              </div>
+              <div class="col-3">
+                <label style="margin-right: 5px;">Monto disponible (Bs.):</label>
+                <span class="ligthBlue" style="font-size: 16px">
+                  {{this.availableAmount | number: "1.2-2"}}</span>
+              </div>
+              <div class="col-3">
+                <label style="margin-right: 20px;">Fecha de inicio:</label>
+                <span>{{ packageSelected.start_date | date: "dd/MM/yyyy"}}</span>
+              </div>
+              <div class="col-3">
+                <label style="margin-right: 20px;">Fecha fin:</label>
+                <span>{{ packageSelected.expiration_date | date: "dd/MM/yyyy"}}</span>
+              </div>
+            </section>
+
+            <div class="col-12">
+              <div *ngIf="this._listVouchers.length > 0; else NoDataResult" class="card tabla__resultados">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                    <tr class="table--titulos">
+                      <th scope="col">Nombre</th>
+
+                      <th scope="col">Cédula de identidad</th>
+                      <th scope="col">Teléfono/Celular</th>
+                      <th scope="col">Correo electrónico</th>
+                      <th class="text-right" scope="col">Monto del vale (Bs.)</th>
+                      <th class="text-center" scope="col">Fecha asignación</th>
+                      <th scope="col">Estado</th>
+                      <th class="text-center" scope="col">Ver</th>
+                      <th class="text-center" scope="col">Reenviar vale</th>
+                      <th class="text-center" scope="col">Anular</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr
+                      *ngFor="let item of this._listVouchers| paginate: { itemsPerPage: _Paginador.ItemsPerPage, currentPage: _Paginador.CurrentPage }; let i= index">
+                      <td>
+                        {{ item.first_name }} {{ item.last_name }}
+                      </td>
+                      <td>{{ item.ci }}</td>
+                      <td>{{ item.phone_number }}</td>
+                      <td style="width: 160px;">{{ item.email }}</td>
+                      <td class="text-right">
+                        {{ item.amount | number: "1.2-2" }}
+                      </td>
+                      <td class="text-center">{{ HGeneral.convertToDate(item.assigned_date) | date: "dd/MM/yyyy" }}
+                      </td>
+                      <td class="center">
+                        {{ HEnumLiteral.voucherStatus(item.status)}}
+                      </td>
+
+                      <td class="icono text-center">
+                        <img (click)="VerDVoucher(item.id)" src="./assets/slices/ico_ver.png" title="Ver">
+                      </td>
+                      <td class="icono text-center">
+                        <img (click)="forwardVoucher(item.id)" *ngIf="item.status==enumVoucher.NoUsed;else cannotForward"
+                             src="./assets/slices/ico_reenviar.png" title="Reenviar"/>
+                        <ng-template #cannotForward>
+                          <img src="./assets/slices/ico_reenviar_desh.png" title="No se puede reenviar"/>
+                        </ng-template>
+                      </td>
+                      <td class="icono text-center ">
+                        <img (click)="openCancelVoucherDialog(item)" *ngIf="item.status==enumVoucher.NoUsed;else cannotCancel"
+                             src="./assets/slices/ico_anular.png" title="Anular"/>
+                        <ng-template #cannotCancel>
+                          <img src="./assets/slices/ico_anular_desh.png" title="No se puede anular"/>
+                        </ng-template>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <div class="da-conetendor-paginacion">
+                    <pagination-controls (pageChange)="_Paginador.CurrentPage = $event" autoHide="true" maxSize="8"
+                                         nextLabel=">" previousLabel="<">
+                    </pagination-controls>
+                  </div>
+                </div>
+              </div>
+              <ng-template #NoDataResult>
+                <div style="margin-top: 0; padding-top: 20px; border-top: 1px solid #dee2e6;">
+                  <span class="lb-noDataResult">{{MSG_HANDLE.NoData}}</span>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</block-ui>

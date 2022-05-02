@@ -1,0 +1,42 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.col-form-label {
+  font-size: 13px !important;
+}
+
+.ngx-pagination .current {
+  background: #138FF1 !important;
+}
+
+.mat-tab-label {
+  justify-content: start !important;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background: #138FF1 !important;
+}
+
+.font-blue {
+  color: var(--blue);
+}
+
+.sticky-top {
+  z-index: 999 !important;
+}
+
+.text-secondary {
+  font-size: 13px !important;
+}
+
+.btn {
+  font-size: 13px !important;
+}

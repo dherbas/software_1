@@ -1,0 +1,57 @@
+{
+    "gitflow4code.features": [
+        {
+            "name": "feature/reporte-ordenes-pagadas",
+            "base": "develop"
+        },
+        {
+            "name": "feature/perfil_new_format",
+            "base": "develop"
+        },
+        {
+            "name": "feature/fix-bugs",
+            "base": "develop"
+        },
+        {
+            "name": "feature/multiempresa",
+            "base": "develop"
+        },
+        {
+            "name": "feature/multiempresa",
+            "base": "develop"
+        },
+        {
+            "name": "feature/discount-voucher",
+            "base": "develop"
+        },
+        {
+            "name": "feature/loginVoucherUser",
+            "base": "develop"
+        },
+        {
+            "name": "feature/mergeEmpresa",
+            "base": "develop"
+        },
+        {
+            "name": "feature/finishingVoucher",
+            "base": "develop"
+        },
+        {
+            "name": "feature/externalUser",
+            "base": "develop"
+        },
+        {
+            "name": "feature/integracion",
+            "base": "develop"
+        },
+        {
+            "name": "feature/voucher_improvements",
+            "base": "develop"
+        },
+        {
+            "name": "feature/ReportesQR",
+            "base": "develop"
+        }
+    ],
+    "editor.maxTokenizationLineLength": 200000
+}

@@ -1,0 +1,115 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Reporte de comisiones detallado por orden de pago </h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <form [formGroup]="form">
+              <div class="form-group row">
+                <label class="col-form-label col-md-1">Empresa:</label>
+                <div class="col-sm-12 col-md-3">
+                  <ng-select2 [data]="this.serviceData" formControlName="service_id" style="width: 100%;" width="100%">
+                  </ng-select2>
+                </div>
+                <label class="col-form-label col-md-auto">Fecha inicio:</label>
+                <div class="col-sm-12 col-md-2">
+                  <input class="form-control" formControlName="start_date" name="start_date" placeholder="dd/mm/yyyy"
+                         type="date">
+                </div>
+                <label class="col-form-label col-md-auto">Fecha fin:</label>
+                <div class="col-sm-12 col-md-2">
+                  <input class="form-control" formControlName="end_date" name="end_date" placeholder="dd/mm/yyyy"
+                         type="date">
+                </div>
+              </div>
+
+            </form>
+            <div class="row align-items-center mt-3">
+              <div class="col-auto">
+                <button (click)="this.getPayOrderForReportCommissions()" class="btn btn-primary"
+                        style="background-color: #138FF1" type="button">Buscar
+                </button>
+              </div>
+              <div class="col"></div>
+              <div *ngIf="this.transactions?.length > 0" class="col-auto">
+                <button (click)="this.downloadXlsx()" class="buttonNuevo">
+                  <span>Descargar</span>
+                  <img src="assets/slices/exportar_xls.png">
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div *ngIf="this.transactions?.length > 0;else empty" class="col-12">
+                <div class="card tabla__resultados">
+                  <div class="table-responsive">
+                    <table class="table tbQR">
+                      <thead>
+                      <tr class="table--titulos">
+                        <th scope="col" style="min-width: 50px;">Nro.</th>
+                        <th scope="col">Nro.Transacción</th>
+                        <th scope="col">Nro. de orden</th>
+                        <th scope="col">Fecha transacción</th>
+                        <th scope="col">Método de pago</th>
+                        <th scope="col">Usuario</th>
+                        <th scope="col">Comercio</th>
+                        <th scope="col"style="min-width:180px;">Glosa</th>
+                        <th scope="col">Código cliente</th>
+                        <th scope="col">Moneda original</th>
+                        <th scope="col">Monto original</th>
+                        <th scope="col">Tipo de cambio</th>
+                        <th scope="col">Monto total (Bs)</th>
+                        <th scope="col">Comisión</th>
+                        <th scope="col">Monto comisión (Bs.)</th>
+                        <th scope="col">Saldo</th>
+                        <th scope="col">Comisión canales (Bs.)</th>
+                        <th scope="col">Código comercio</th>
+                        <th scope="col">Código método de pago</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr
+                        *ngFor="let item of this.transactions | paginate: { itemsPerPage: pagination.ItemsPerPage, currentPage: pagination.CurrentPage };index as index;">
+                        <td>{{index + 1}}</td>
+                        <td>{{item.pay_order_transaction}}</td>
+                        <td>{{item.pay_order_number}}</td>
+                        <td>{{item.pay_order_transaction_date}}</td>
+                        <td>{{item.pay_channel_name}}</td>
+                        <td>{{item.user}}</td>
+                        <td>{{item.service_name}}</td>
+                        <td title="{{item.glosa}}" >{{ (item.glosa.length>40)? (item.glosa | slice:0:40)+'..':(item.glosa) }}</td>
+                        <td>{{item.client_code}}</td>
+                        <td>{{item.original_currency}}</td>
+                        <td>{{item.original_total_amount | number:'1.2-2'}}</td>
+                        <td>{{item.exchange_rate | number:'1.2-2' }}</td>
+                        <td>{{item.total_amount| number:'1.2-2'}}</td>
+                        <td>{{item.commission}}</td>
+                        <td>{{item.commission_amount| number:'1.2-2'}}</td>
+
+                        <td>{{item.residue| number:'1.2-2'}}</td>
+                        <td>{{item.commission_pay_channel| number:'1.2-2'}}</td>
+                        <td>{{item.service_code}}</td>
+                        <td>{{item.pay_channel_code}}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="this.transactions?.length > 0" class="col-md-12">
+                <pagination-controls (pageChange)="this.pagination.CurrentPage = $event" autoHide="true" maxSize="8"
+                                     nextLabel=">" previousLabel="<">
+                </pagination-controls>
+              </div>
+              <ng-template #empty>
+                <div class="col-12 mt-3">
+                  <p>No se encontraron resultados para su criterio de búsqueda.</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

@@ -1,0 +1,5 @@
+@media (min-width: 768px) {
+  .mr-md-custom {
+    margin-right: 0.9rem !important;
+  }
+}

@@ -1,0 +1,185 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Nueva orden de orden de pago</h2>
+      <div class="card shadow-sm">
+        <div class="card-body card--contenedor card-context">
+          <div class="col-lg-12">
+            <form (ngSubmit)="newPayOrder()">
+              <div *ngIf="this.companies.length > 1" class="row">
+                <div class="col-6" style="    margin-bottom: 20px;">
+                  <div class="form">
+                    <label for="selectedCompany" style="margin-right: 80px;">Empresa: </label>
+                    <ng-select2 [(ngModel)]="selectedCompany" class="custom-select col-6" id="selectedCompany"
+                                name="selectedCompany">
+                      <option *ngFor="let item of companies" [attr.selected]="item == companies[0] ? true : null"
+                              value="{{item.code}}">
+                        {{item.name}}</option>
+                    </ng-select2>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-4 contenedor-subtitle" style="margin: 0;"><span class="dot-subtitle"></span>
+                  <span class="subtitle">Datos del cliente</span>
+                </div>
+                <div class="col-12">
+                  <span class="lb-error pl-1">{{ _msgError }}</span>
+                </div>
+                <div class="col-12">
+                  <table class="table-form">
+                    <tr class="size">
+                      <td style="width: 135px;"></td>
+                      <td style="width: 250px;"></td>
+                      <td style="width: 135px;"></td>
+                      <td style="width: 250px;"></td>
+                    </tr>
+                    <tr>
+                      <td><label>Nombre(s): <span class="text-danger"><strong>*</strong></span></label></td>
+                      <td>
+                        <input [(ngModel)]="_client.name" class="form-control" maxlength="30" name="name"
+                               type="text"/>
+                      </td>
+                      <td class="new-data"><label>Apellidos: <span
+                        class="text-danger"><strong>*</strong></span></label></td>
+                      <td>
+                        <input [(ngModel)]="_client.last_name" class="form-control" maxlength="30" name="last_name"
+                               type="text"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><label> Carnet de identidad:</label></td>
+                      <td>
+                        <input [(ngModel)]="_client.ci" class="form-control" maxlength="10" name="ci" type="text"/>
+                      </td>
+                      <td class="new-data"><label>Teléfono/Celular:</label></td>
+                      <td>
+                        <input [(ngModel)]="_client.phone" appOnlynumber class="form-control" maxlength="10"
+                               name="phone"
+                               type="text"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><label> Correo electrónico:</label></td>
+                      <td colspan="3">
+                        <input [(ngModel)]="_client.email" class="form-control" name="email" type="text"/>
+                      </td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+
+                    <tr>
+                      <td><label> Razón Social:</label></td>
+                      <td>
+                        <input [(ngModel)]="_client.business_name" class="form-control" maxlength="50"
+                               name="business_name"
+                               type="text"/>
+                      </td>
+
+                      <td class="new-data"><label> NIT:</label></td>
+                      <td>
+                        <input [(ngModel)]="_client.nit" class="form-control" maxlength="15" name="nit" type="text"/>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td><label> Observaciones:</label></td>
+                      <td colspan="3">
+                        <input [(ngModel)]="_client.observation" class="form-control" maxlength="300"
+                               name="observation"
+                               type="text"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><label>Items de compra:</label></td>
+                      <td>
+                        <select [(ngModel)]="typeItemSelected" class="custom-select form-control" name="type_of_item">
+                          <option disabled hidden selected [ngValue]="0">Seleccionar</option>
+                          <option [ngValue]="enumTypeItemPayOrder.Amount">Solo monto</option>
+                          <option [ngValue]="enumTypeItemPayOrder.PurchaseItems">Items de compra</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr *ngIf="typeItemSelected==enumTypeItemPayOrder.Amount">
+                      <td><label>Monto ({{this._currency}})</label></td>
+                      <td>
+                        <input currencyMask [(ngModel)]="amount" class="form-control"
+                               name="amount" type="text"/>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+
+
+                <div class="col-12">
+                  <div *ngIf="typeItemSelected==enumTypeItemPayOrder.PurchaseItems" class="row">
+                    <div class="col-12 text-right py-2">
+                      <button (click)="displayNewIem()" class="btn btn-primary" type="button">
+                        Agregar ítem de compra
+                      </button>
+                    </div>
+                    <div class="col-12">
+                      <div *ngIf="_ListItemOrder.length > 0; else noItems" class="card tabla__resultados">
+                        <div class="table-responsivr">
+                          <table class="table table-normal">
+                            <thead>
+                            <tr class="table--titulos">
+                              <th scope="col">Nro.</th>
+                              <th scope="col">Descripción</th>
+                              <th scope="col">Precio unitario ({{this._currency}})</th>
+                              <th scope="col">Cantidad</th>
+                              <th scope="col">Total ({{this._currency}})</th>
+                              <th scope="col">Eliminar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let item of this._ListItemOrder; index as i">
+                              <td scope="row">{{ i + 1 }}</td>
+                              <td>{{ item.description }}</td>
+                              <td class="center">
+                                {{ item.unitary_price | number: "1.2-2" }}
+                              </td>
+                              <td class="center">{{ item.quantity }}</td>
+                              <td class="center">
+                                {{
+                                item.unitary_price * item.quantity
+                                  | number: "1.2-2"
+                                }}
+                              </td>
+
+                              <td class="icono">
+                                <img (click)="removeElement(item.id)" src="./assets/slices/ico_eliminar.png"
+                                     title="Eliminar ítem"/>
+                              </td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <ng-template #noItems>
+                        <div style="display: block;">
+                          <span class="lbGray">No exiten items de compra agregados.</span>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="contenedor-botones">
+                    <button (click)="cancel()" class="btn btn-primary btn-blue" type="button">
+                      Cancelar
+                    </button>
+                    <button class="btn btn-primary" type="submit">
+                      Aceptar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

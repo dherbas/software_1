@@ -1,0 +1,45 @@
+::ng-deep .treeview-container {
+  max-height: max-content !important;
+}
+
+.row-item .fa-trash {
+  margin-left: 0.3rem;
+}
+
+.da-ico-right {
+  margin-right: 16px;
+  cursor: pointer;
+  content: url("../../../../assets/slices/flecha_arbol1.png");
+}
+
+.da-ico-down {
+  margin-right: 16px;
+  cursor: pointer;
+  content: url("../../../../assets/slices/flecha_arbol2.png");
+}
+
+.da-div-arbol-permiso .desmarcado {
+  background-image: url("../../../../assets/slices/check1.png") !important;
+}
+
+.da-div-arbol-permiso .marcado {
+  background-image: url("../../../../assets/slices/check2.png") !important;
+}
+
+.da-div-arbol-permiso .marcado-bloqueado {
+  background-image: url("../../../../assets/slices/check4.png") !important;
+}
+
+.da-div-arbol-permiso .indeterminado {
+  background-image: url("../../../../assets/slices/check3.png") !important;
+}
+
+.da-div-arbol-permiso .indeterminado-bloqueado {
+  background-image: url("../../../../assets/slices/check5.png") !important;
+}
+
+.da-arbol-permiso input[type="checkbox"] {
+  display: none;
+  height: 22px;
+  width: 22px;
+}

@@ -1,0 +1,19 @@
+<div class="wrapper">
+    <app-menu [isMenuVisible]="(isMenuVisible)"></app-menu>
+    <div class="container-fluid p-0 content__data">
+        <app-header (clicked)="onClicked()"></app-header>
+        <!-- <div class="container-fluid mt-3"> -->
+            <router-outlet></router-outlet>
+        <!-- </div> -->
+    </div>
+</div>
+
+<script>
+    // $(document).ready(function () {
+    //     console.log('PRUEBAAAAAAAA');
+
+    //     $("#sidebarCollapse").on("click", function () {
+    //         $("#sidebar").toggleClass("active");
+    //     });
+    // });
+</script>

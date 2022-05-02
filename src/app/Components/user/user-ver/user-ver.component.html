@@ -1,0 +1,111 @@
+<div class="container-fluid da-p-20px">
+  <div class="row">
+    <div class="col-12 d-flex da-lb-16-02-b">
+      <div class="da-linea da-mr-5px"></div>
+      Detalle usuario
+    </div>
+  </div>
+  <div class="row da-pt-20px">
+    <div class="col-3 da-lb-13-02-b">
+      Usuario:
+    </div>
+    <div class="col-9 da-lb-13-03-r">
+      {{usuario.username}}
+    </div>
+  </div>
+  <div class="row da-pt-5px">
+    <div class="col-3 da-lb-13-02-b">
+      Nombre:
+    </div>
+    <div class="col-9 da-lb-13-03-r">
+      {{usuario.first_name}} {{usuario.last_name}}
+    </div>
+  </div>
+
+  <div class="row da-pt-5px">
+    <div class="col-3 da-lb-13-02-b">
+      Correo:
+    </div>
+    <div class="col-9 da-lb-13-03-r">
+      {{usuario.email}}
+    </div>
+  </div>
+  <div class="row da-pt-5px">
+    <div class="col-3 da-lb-13-02-b">
+      Perfiles:
+    </div>
+    <div class="col-9 da-lb-13-03-r">
+      <!-- {{usuario.nombrePerfil}}  -->
+
+    </div>
+  </div>
+  <div class="row da-pt-20px">
+    <div class="col-12 da-lb-13-02-b">
+      Funciones asignadas
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="da-div-border-1px da-h-300px da-arbol-permiso-lectura" style="overflow-x: auto">
+        <ul *ngIf="listaPermisos.length> 0">
+          <ng-container *ngFor="let padre of listaPermisos">
+            <li>
+              <ng-container *ngIf="padre.permissions.length> 0; else else01">
+                <div class="d-flex da-padre">
+                  <div>
+                    <img src="assets/images/slices/flecha_arbol2.png">
+                  </div>
+                  <div>
+                    <img src="assets/images/slices/tiquear2.png">
+                  </div>
+                  <div>
+                    {{padre.name}}
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #else01>
+                <div class="d-flex da-soltero">
+                  <div>
+                    <img src="assets/images/slices/tiquear2.png">
+                  </div>
+                  <div>
+                    {{padre.name}}
+                  </div>
+                </div>
+              </ng-template>
+              <ng-container *ngIf="padre.permissions.length> 0">
+                <ul>
+                  <ng-container *ngFor="let hijo of padre.permissions">
+                    <li>
+                      <div class="d-flex da-hijo">
+                        <div>
+                          <img src="assets/images/slices/tiquear2.png">
+                        </div>
+                        <div>
+                          {{hijo.name}}
+                        </div>
+                      </div>
+                    </li>
+                  </ng-container>
+                </ul>
+              </ng-container>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="row">
+      <div class="col-12 da-pt-10px">
+        <input *ngIf="habilitado" type="checkbox" id="da-check-habidesa" class="css-checkbox" checked>
+        <label *ngIf="habilitado" for="da-check-habidesa" class="da-lb-13-02-r css-label-disabled">Habilitar</label>
+        <input *ngIf="!habilitado" type="checkbox" id="da-check-habidesa" class="css-checkbox">
+        <label *ngIf="!habilitado" for="da-check-habidesa" class="da-lb-13-02-r css-label">Habilitar</label>
+      </div>
+    </div> -->
+  <div class="row">
+    <div class="col-12 text-center da-pt-20px">
+      <button class="da-bt-azul da-w-100px" (click)="aceptar()">ACEPTAR</button>
+    </div>
+  </div>
+</div>

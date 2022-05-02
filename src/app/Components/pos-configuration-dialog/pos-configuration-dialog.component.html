@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-12"><p class="dialogo-titulo">Editar configuración</p></div>
+  <div class="col-12 pt-2">
+    <form [formGroup]="form">
+      <div class="form-group row">
+        <label class="col-auto pr-0">{{ item.description }}:</label>
+        <div class="col">
+          <input [dropSpecialCharacters]="false" [showMaskTyped]="true" class="form-control d-inline"
+                 formControlName="value"
+                 id="value"
+                 mask="IP"
+                 maxlength="16"
+                 name="value" type="text">
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button class="btn btn-primary btn-blue mr-3" mat-dialog-close>
+    Cancelar
+  </button>
+  <button (click)="save()" class="btn btn-primary">Actualizar</button>
+</div>

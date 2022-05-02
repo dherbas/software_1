@@ -1,0 +1,212 @@
+<block-ui>
+  <div class="container-fluid mt-3">
+    <div class="col-lg-12">
+      <h2 class="font-weight-bold card--title">Movimientos</h2>
+      <div class="card shadow-sm mt-4">
+        <div class="card-body card--contenedor">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <form (ngSubmit)="QueryMovements()" class="mt-1">
+                  <div *ngIf="this._filters.companies.length > 1" class="row">
+                    <div class="col-3">
+                      <div class="form-inline" style="flex-flow: nowrap !important;
+                                            margin-bottom: 25px;">
+                        <label class="col-5 p-0">Empresas: </label>
+                        <ng-select2 [(ngModel)]="_filters.selectedCompany" id="selectedCompany" name="selectedCompany">
+                          <option *ngFor="let item of _filters.companies"
+                                  [attr.selected]="item == _filters.companies[0] ? true : null"
+                                  value="{{item.code}}">
+                            {{item.name}}</option>
+                        </ng-select2>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-3">
+                      <div class="form-inline">
+                        <label class="col-form-label col-5 p-0" for="monto">Monto del vale: </label>
+                        <select [(ngModel)]="_filters.ammount" class="custom-select col-7"
+                                name="ammount">
+                          <option selected value="0">Todos</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                          <option value="200">200</option>
+                          <option value="300">300</option>
+                          <option value="400">400</option>
+                          <option value="500">500</option>
+                          <option value="600">600</option>
+                          <option value="800">800</option>
+                          <option value="1000">1000</option>
+                          <option value="1200">1200</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-inline">
+                        <label class="col-form-label col-5 p-0" for="monto">Canal de pago:</label>
+                        <select [(ngModel)]="_filters.paymentChannel"
+                                class="custom-select col-7" name="paymentChannel">
+                          <!-- NO EXISTE LA OPCION DE BUSCAR POR TODOS -->
+                          <option value="0">Todos</option>
+                          <option value="3">Tarjeta de Debito/Credito</option>
+                          <option value="2">Tigo Money</option>
+                          <option value="1">Pago en Punto Físico</option>
+                          <option value="7">Transferencia QR</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-inline">
+                        <label class="col-form-label col-5 p-0" for="monto">Estado del pago:</label>
+                        <select [(ngModel)]="_filters.state" class="custom-select col-7"
+                                name="state">
+                          <!-- NO EXISTE LA OPCION DE BUSCAR POR TODOS -->
+                          <option value="0">Todos</option>
+                          <option value="2">Confirmada</option>
+                          <option value="1">Pendiente</option>
+                          <option value="3">Cancelada</option>
+                        </select>
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-inline">
+                        <label class="col-form-label col-5 p-0" for="monto">Estado del vale:</label>
+                        <select [(ngModel)]="_filters.status" class="custom-select col-7"
+                                name="status">
+                          <!-- NO EXISTE LA OPCION DE BUSCAR POR TODOS -->
+                          <option value="5">Todos</option>
+                          <option value="1">Usado</option>
+                          <option value="0">No usados</option>
+                          <option value="3">Anulados</option>
+                        </select>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="form-inline col-3">
+                      <label class="col-form-label pr-2 col-5" style="padding:0;">Fecha inicial:</label>
+                      <input [(ngModel)]="this._filters.startDate" class="form-control col-7"
+                             id="startDate" max="{{this._filters.endDate}}" name="startDate" type="date"/>
+                    </div>
+                    <div class="form-inline col-3">
+                      <label class="col-form-label p-0 col-5">Fecha final:</label>
+                      <input [(ngModel)]="this._filters.endDate" class="form-control col-7"
+                             id="endDate" min="{{this._filters.startDate}}" name="endDate" type="date"/>
+                    </div>
+                  </div>
+                  <div class="row mt-3 mb-4">
+                    <div class="col-3">
+                      <div class="form-inline">
+                        <label class="col-form-label col-5 p-0" for="monto">Búsqueda por: </label>
+                        <select (ngModelChange)="onChange($event)" [(ngModel)]="_filters.searchType"
+                                class="custom-select col-7" id="monto"
+                                name="searchType">
+                          <option value="0">CI</option>
+                          <option value="1">Nro. de orden</option>
+                          <option value="2">Nro. transaccion</option>
+                          <option value="3">Fecha de pago</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div *ngIf="_filters.searchType != '3'; else Sdate" class="col-9">
+                      <div class="form-group has-search">
+                        <span class="fas fa-search form-control-feedback"></span>
+                        <input [(ngModel)]="_filters.searchText" class="form-control" name="searchText"
+                               placeholder="Buscar" type="text">
+                      </div>
+                    </div>
+                    <ng-template #Sdate>
+                      <div class="form-inline col-3">
+                        <label class="col-form-label p-0 col-5"
+                               style="padding-right: 0px !important;">Fecha: </label>
+                        <input [(ngModel)]="this._filters.searchText" class="form-control col-7"
+                               name="searchText" type="date"/>
+                      </div>
+                    </ng-template>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col-10">
+                      <button class="btn btn-primary" style="margin-top: -1rem;background-color: #138FF1"
+                              type="submit">
+                        Consultar
+                      </button>
+                    </div>
+
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div *ngIf="this.totalMovements > 0" class="row">
+              <div class="col-9">
+                <pagination-controls (pageChange)="p = $event" nextLabel="Siguiente"
+                                     previousLabel="Anterior">
+                </pagination-controls>
+              </div>
+
+              <div *ngIf="this.totalMovements > 0" class="col-3" style="text-align: right;">
+                <img (click)="descargar()" src="./assets/img/exportar_xls.png"
+                     style="cursor: pointer;"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div *ngIf="this.totalMovements > 0" class="card tabla__resultados">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                      <tr class="table--titulos" style="padding: 1rem !important">
+                        <th style="min-width: 100px;">Nro. Orden</th>
+                        <th style="min-width: 100px;">Cliente</th>
+                        <th style="min-width: 100px;">CI</th>
+                        <th style="min-width: 100px;">Celular</th>
+                        <th style="min-width: 100px;">Correo electrónico</th>
+                        <th style="min-width: 100px;">Monto</th>
+                        <th style="min-width: 100px;">Nro. Transacción</th>
+                        <th style="min-width: 100px;">Fecha de compra</th>
+                        <th style="min-width: 100px;">Canal de pago</th>
+                        <th style="min-width: 100px;">Estado del pago</th>
+                        <th style="min-width: 100px;">Estado del vale</th>
+                        <th style="min-width: 100px;">Canjeado a través de</th>
+                        <th style="min-width: 100px;">Fecha de canje</th>
+                        <th style="min-width: 100px;">Canjeado por</th>
+                        <th style="min-width: 100px;">Emitido por</th>
+                        <th style="min-width: 100px;">Tipo</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr
+                        *ngFor="let item of this.movements | paginate: { itemsPerPage: 10, currentPage: p }">
+                        <td>{{item.pay_order_number}}</td>
+                        <td>{{item.client_first_name}} {{ item.client_last_name}}</td>
+                        <td>{{ item.client_ci }}</td>
+                        <td>{{ item.client_phone}}</td>
+                        <td>{{ item.client_email }}</td>
+                        <td>{{ item.total_amount | number }}.00</td>
+                        <td>{{ item.transaction_number  }}</td>
+                        <td>{{ item.transaction_date  | date:'dd-MM-yyyy'}}</td>
+                        <td>{{ item.pay_channels_name}}</td>
+                        <td>{{ item.pay_order_state_literal }}</td>
+                        <td>{{ item.tickets_status }}</td>
+                        <td>{{ item.stage }}</td>
+                        <td>{{ item.interchange_date  | date:'dd-MM-yyyy'}}</td>
+                        <td>{{ item.username }}</td>
+                        <td>{{ item.channel_emission }}</td>
+                        <td>{{ item.type }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

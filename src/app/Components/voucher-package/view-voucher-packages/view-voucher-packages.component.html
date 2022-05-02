@@ -1,0 +1,75 @@
+<h2 class="font-weight-bold card--title" style="color: #174a84;">Detalle de asignación</h2>
+
+<div class="row">
+    <div class="col-12">
+        <div class="form-group row mb-0">
+            <label class="col-2">Empresa:</label>
+            <label class="col-3 lbl-default">
+                {{this.voucherPackageParent.voucher_company}}</label>
+            <label class="col-2" style="margin-right: 0.55rem;">Usuario:</label>
+            <label class="col-4 lbl-default">
+                {{this.voucherPackageParent.user_account.username}}</label>
+
+            <label class="col-2">Nombre(s):</label>
+            <label class="col-3 lbl-default">
+                {{this.voucherPackageParent.user_account.first_name}}</label>
+            <label class="col-2" style="margin-right: 0.55rem;">Apellido(s):</label>
+            <label class="col-4 lbl-default">
+                {{this.voucherPackageParent.user_account.last_name}}</label>
+
+            <label class="col-2">Teléfono/Celular:</label>
+            <label class="col-3 lbl-default">
+                {{this.voucherPackageParent.user_account.phone_number}}</label>
+            <label class="col-auto">Correo electrónico:</label>
+            <label class="col-4 lbl-default">
+                {{this.voucherPackageParent.user_account.email}}</label>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card tabla__resultados">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr class="table--titulos">
+                            <th style="width: 27%;">Descripción</th>
+                            <th style="width: 15%; text-align: right;">Monto asignado (Bs.)</th>
+                            <th style="width: 15%; text-align: right;">Monto utilizado (Bs.)</th>
+                            <th style="width: 12%; text-align: center;">Fecha de registro</th>
+                            <th style="width: 12%; text-align: center;">Fecha de inicio</th>
+                            <th style="width: 12%; text-align: center;">Fecha fin</th>
+                            <th style="width: 7%; text-align: center;">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of this.voucherPackageParent.voucher_packages">
+                            <td>{{item.description}}</td>
+                            <td class="text-right">{{item.amount|number:'1.2-2'}}</td>
+                            <td class="text-danger text-right">{{item.amount_used|number:'1.2-2'}}</td>
+                            <td class="text-center">{{ item.created_at | date:"dd/MM/yyyy" }}</td>
+                            <td class="text-center">{{ item.start_date | date:"dd/MM/yyyy" }}</td>
+                            <td class="text-center">{{ item.expiration_date | date:"dd/MM/yyyy" }}</td>
+                            <td class="text-center">{{item.getStatus()}}
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-group row pt-4">
+            <label class="col-auto">Total monto asignado (Bs.):</label>
+            <label class="col-auto lbl-default mr-md-3">{{this.total_amount|number:'1.2-2'}}</label>
+            <label class="col-auto">Total monto utilizado (Bs.):</label>
+            <label class="col-auto text-danger">{{this.total_amount_used|number:'1.2-2'}}</label>
+        </div>
+
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        <button type="button" class="btn btn-dark-custom" (click)="onCancel()">
+            Cerrar
+        </button>
+    </div>
+</div>

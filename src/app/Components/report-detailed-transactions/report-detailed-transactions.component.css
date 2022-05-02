@@ -1,0 +1,21 @@
+@media (min-width: 768px) {
+  .mr-md-custom-3 {
+    margin-right: 2.6rem !important;
+  }
+
+  .mr-md-custom-2 {
+    margin-right: 1.8rem !important;
+  }
+
+  .mr-md-custom-1-2 {
+    margin-right: 1.2rem !important;
+  }
+
+  .mr-md-custom-1 {
+    margin-right: 0.7rem !important;
+  }
+}
+
+.col-form-label {
+  color: #174a84;
+}
